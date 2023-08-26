@@ -10,11 +10,16 @@ Easy deployable system (API) for creating subscription based applications.
 
 # Deployment
 
-TBD.
+Project currently only deployable with docker-compose (`docker-compose.yml` exists).
+Just run docker compose and all will start for you (Database, Server)
+
+# Running under proxy
+
+TBD. Just follow default configuration
 
 # Configuration
 
-TBD.
+Look inside `.example.env` for example configuration (write own inside `.env`)
 
 # Features
 
