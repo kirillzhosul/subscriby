@@ -8,7 +8,6 @@ from .serializers import serialize_subscription
 from .database.models import Subscription
 from .database.core import get_db, create_all
 
-app = FastAPI()
 router = APIRouter(prefix="/subscription")
 
 
@@ -31,5 +30,8 @@ def publish(db: Session = Depends(get_db)):
     return serialize_subscription(subscription)
 
 
-app.include_router(router)
-app.add_event_handler("startup", create_all)
+def create_application():
+    app = FastAPI()
+    app.include_router(router)
+    app.add_event_handler("startup", create_all)
+    return app

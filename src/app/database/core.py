@@ -1,10 +1,20 @@
+from sqlalchemy.pool import QueuePool
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine, MetaData
 
-DB_URL = "sqlite:///./db.db"
+from app.settings import Settings
 
-engine = create_engine(DB_URL, connect_args={"check_same_thread": False})
+engine = create_engine(
+    url=Settings().database_url,
+    max_overflow=0,
+    pool_pre_ping=True,
+    pool_recycle=3600,
+    pool_timeout=10,
+    pool_size=20,
+    poolclass=QueuePool,
+)
+
 metadata = MetaData()
 Base: type = declarative_base(metadata=metadata)
 SessionLocal = sessionmaker(

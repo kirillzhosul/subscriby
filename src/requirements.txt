@@ -1,0 +1,15 @@
+# Framework
+fastapi==0.101.1
+
+# Server
+uvicorn==0.22.0
+gunicorn==20.1.0
+# Database
+sqlalchemy==1.4.45
+psycopg2-binary==2.9.7
+
+# Environment settings management
+pydantic_settings==2.0.3
+
+# Utils
+pytz==2023.3
