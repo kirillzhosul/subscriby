@@ -16,13 +16,13 @@ TBD.
 
 - Creating new subscriptions
 - Checking subscription status
+- Revoking subscriptions
+- Auth for system methods (publish, revoke)
 
 # Roadmap
 
-- Docker
 - Deployment guide
 - Refactoring
 - Configuration system
-- Authority check for creating and modifying subscriptions
 - More features to deal with subscription based - applications
 - Included management system (bots, website)
