@@ -1,3 +1,6 @@
+"""
+    Core service for database, dependencies, engine and etc.
+"""
 from sqlalchemy.pool import QueuePool
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
@@ -23,6 +26,9 @@ SessionLocal = sessionmaker(
 
 
 def create_all() -> None:
+    """
+    Current alternative to migration, will create all required database tables.
+    """
     metadata.create_all(bind=engine)
 
 

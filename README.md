@@ -12,6 +12,10 @@ Easy deployable system (API) for creating subscription based applications.
 
 TBD.
 
+# Configuration
+
+TBD.
+
 # Features
 
 - Creating new subscriptions
@@ -21,8 +25,6 @@ TBD.
 
 # Roadmap
 
-- Deployment guide
-- Refactoring
-- Configuration system
+- Deployment and configuration guide
 - More features to deal with subscription based - applications
 - Included management system (bots, website)

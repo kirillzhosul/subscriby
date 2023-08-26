@@ -1,7 +1,15 @@
+"""
+    Environment settings for `Subscriby`
+"""
+
 from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
+    """
+    Environment settings for `Subscriby`
+    """
+
     postgres_name: str = "subscriby"
     postgres_user: str = "subscriby"
     postgres_password: str = "subscriby"
