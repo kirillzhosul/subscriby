@@ -1,5 +1,5 @@
 from secrets import token_urlsafe
-from datetime import datetime
+from datetime import timedelta, datetime
 
 from sqlalchemy.orm import Session
 from fastapi import FastAPI, Depends, APIRouter
@@ -21,13 +21,13 @@ def check(secret_key: str, db: Session = Depends(get_db)):
 
 
 @router.get("/publish")
-def publish(db: Session = Depends(get_db)):
-    expires_at = datetime.now()
+def publish(days: int = 3, db: Session = Depends(get_db)):
+    expires_at = datetime.now() + timedelta(days=days)
     secret_key = token_urlsafe(24)
     subscription = Subscription(secret_key=secret_key, expires_at=expires_at)
     db.add(subscription)
     db.commit()
-    return serialize_subscription(subscription)
+    return serialize_subscription(subscription) | {"days": days}
 
 
 def create_application():

@@ -12,6 +12,6 @@ def serialize_subscription(subscription: Subscription) -> dict:
         "subscription": {
             "secret_key": subscription.secret_key,
             "expires_at": time.mktime(subscription.expires_at.timetuple()),
-            "is_valid": datetime.now().replace(tzinfo=pytz.UTC) > expires_at,
+            "is_valid": datetime.now().replace(tzinfo=pytz.UTC) < expires_at,
         }
     }
