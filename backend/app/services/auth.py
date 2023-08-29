@@ -4,6 +4,7 @@
 from starlette.exceptions import HTTPException
 from fastapi import Request
 from app.settings import Settings
+from app.plugins import CustomAuthPlugin
 
 
 class AuthDependency:
@@ -25,4 +26,10 @@ class AuthDependency:
                 if self._get_secret_from_request(req) != required_secret:
                     raise HTTPException(status_code=401)
                 return True
+            case "custom":
+                # -> Custom user authorization with custom plugin class.
+                plugin = CustomAuthPlugin()
+                if plugin(secret_key=self._get_secret_from_request(req), request=req):
+                    return True
+                raise HTTPException(status_code=401)
         return False

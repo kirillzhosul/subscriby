@@ -12,6 +12,7 @@ async def _check_for_admin(message: Message) -> bool:
     Returns user is admin or not and send message if not.
     ! TODO: Migrate with middlewares / another right solution.
     """
+    requests.get()
     admin_ids = Settings().subscriby_telegram_admin_ids
     is_admin = message.from_user.id in admin_ids
     if not is_admin:
@@ -24,7 +25,7 @@ def _api_call(method: str, params: dict) -> dict | None:
     Calls API and returns JSON response or None if error.
     """
     try:
-        method_url = Settings().subscriby_api_url + f"/{method}"
+        method_url = f"{Settings().subscriby_api_url}/{method}"
         request = requests.get(url=method_url, params=params).json()
         if "error" in request:
             raise ValueError
@@ -46,6 +47,7 @@ async def start_command(message: Message) -> None:
 
 
 async def start_revoke_subscription(message: Message) -> None:
+
     await message.answer("Revoking is not implemented yet...")
 
 

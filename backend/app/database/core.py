@@ -1,12 +1,16 @@
 """
     Core service for database, dependencies, engine and etc.
 """
+from typing import TypeVar, Callable
+
 from sqlalchemy.pool import QueuePool
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine, MetaData
-
+from fastapi import Depends
 from app.settings import Settings
+
+T = TypeVar("T")
 
 engine = create_engine(
     url=Settings().database_url,
@@ -41,3 +45,15 @@ def get_db() -> sessionmaker:  # type: ignore[misc]
         yield db_session
     finally:
         db_session.close()
+
+
+def get_repository(repo_type: type[T]) -> Callable[[Session], T]:
+    """
+    Instantiates repository dependency (wrapped) based on type.
+    (Returns function that instantiates repository with given type)
+    """
+
+    def wrapper(db: Session = Depends()) -> T:
+        return repo_type(db)  # type: ignore[call-arg]
+
+    return wrapper

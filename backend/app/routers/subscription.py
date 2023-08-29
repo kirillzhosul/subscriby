@@ -2,48 +2,50 @@
     Router for subscription methods
 """
 
-from secrets import token_urlsafe
-from datetime import timedelta, datetime
-
-from sqlalchemy.orm import Session
 from fastapi import Depends, APIRouter
-
-from app.services import AuthDependency
+from app.services import preprocess_payload, AuthDependency
 from app.serializers import serialize_subscription
-from app.database.models import Subscription
-from app.database.core import get_db
+from app.plugins import CustomPayloadPlugin
+from app.database.repositories.subscription import SubscriptionRepository
+from app.database.core import get_repository
 
 router = APIRouter(prefix="/subscription")
 
 
 @router.get("/check")
-def check(secret_key: str, db: Session = Depends(get_db)):
-    if subscription := (
-        db.query(Subscription).filter(Subscription.secret_key == secret_key).first()
-    ):
-        return serialize_subscription(subscription)
-    return {"error": "Not Found"}
+def check(
+    secret_key: str,
+    repo: SubscriptionRepository = Depends(get_repository(SubscriptionRepository)),
+):
+    """
+    Check that given subscription is exists and valid
+    """
+    return serialize_subscription(repo.get(secret_key=secret_key))
 
 
 @router.get("/revoke", dependencies=[Depends(AuthDependency())])
-def revoke(secret_key: str, db: Session = Depends(get_db)):
-    if subscription := (
-        db.query(Subscription).filter(Subscription.secret_key == secret_key).first()
-    ):
-        subscription.is_active = False
-        db.add(subscription)
-        db.commit()
-        return serialize_subscription(subscription)
-    return {"error": "Not Found"}
+def revoke(
+    secret_key: str,
+    repo: SubscriptionRepository = Depends(get_repository(SubscriptionRepository)),
+):
+    """
+    Revoke given subscription by secret
+    """
+    return serialize_subscription(repo.revoke(secret_key=secret_key))
 
 
 @router.get("/publish", dependencies=[Depends(AuthDependency())])
-def publish(days: int = 3, db: Session = Depends(get_db)):
-    expires_at = datetime.now() + timedelta(days=days)
-    secret_key = token_urlsafe(24)
-    subscription = Subscription(
-        secret_key=secret_key, expires_at=expires_at, payload="{}"
-    )
-    db.add(subscription)
-    db.commit()
-    return serialize_subscription(subscription) | {"days": days}
+def publish(
+    days: int = 3,
+    payload: str = "{}",
+    repo: SubscriptionRepository = Depends(get_repository(SubscriptionRepository)),
+):
+    """
+    Create new subscription for given days and payload
+    """
+    if payload != "{}":
+        payload = preprocess_payload(payload=payload)
+        return {"error": "Payload injection is not implemented yet"}
+    return serialize_subscription(repo.create(days=days, payload=payload)) | {
+        "days": days
+    }

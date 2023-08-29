@@ -9,6 +9,7 @@
     https://docs.gunicorn.org/en/latest/settings.html
 """
 
+
 from multiprocessing import cpu_count
 
 from pydantic_settings import BaseSettings

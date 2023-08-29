@@ -13,14 +13,6 @@ Easy deployable system (API) for creating subscription based applications
 - Query your subscription key from user inside your application (fetch API call)
 - Create and manage new subscription for users (by hand, implementing own management tool, or use premade inside `frontends` directory)
 
-# Deployment
-
-(How to deploy API)
-
-- Do `git clone` on your server
-- Edit `.example.env` and copy to `.env`
-- Run `docker compose up -d` inside `backend` directory
-
 # Configuration
 
 - `SUBSCRIBY_AUTH_METHOD`: Auth methods to use (See `Authorization`)
@@ -29,6 +21,7 @@ Easy deployable system (API) for creating subscription based applications
 
 - `none`: No additional authorization
 - `secret`: Require `secret` GET field or `Authorization` header (with or without `Bearer`) which should equals to `SUBSCRIBY_AUTH_SECRET`
+- `custom`: Will call `plugins/custom_auth` plugin with your own code.
 
 # Frontends
 
@@ -40,3 +33,15 @@ Easy deployable system (API) for creating subscription based applications
 - Checking subscription status
 - Revoking subscriptions
 - Auth for system methods (publish, revoke)
+
+# Deployment
+
+(How to deploy API)
+
+- Do `git clone` on your server
+- Edit `.example.env` and copy to `.env`
+- Run `docker compose up -d` inside `backend` directory
+
+# Running behing a proxy
+
+Should be same as default deployment but you have to declare proxy to the API (Like, for NGINX)

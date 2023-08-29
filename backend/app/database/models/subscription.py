@@ -5,7 +5,6 @@
 from sqlalchemy.sql import text, func
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy import String, Integer, DateTime, Column, Boolean
-
 from app.database.core import Base
 
 
