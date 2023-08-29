@@ -1,0 +1,4 @@
+# Framework
+aiogram==2.25.1
+# Stuff
+requests==2.31.0

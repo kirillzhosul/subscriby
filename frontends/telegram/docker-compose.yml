@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  telegram:
+    hostname: subscriby
+    restart: unless-stopped
+    build: .
+    networks:
+      - subscriby
+    env_file: ".env"
+    command: "python run.py"
+
+networks:
+  subscriby:
+    name: subscriby
