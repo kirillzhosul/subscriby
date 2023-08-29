@@ -23,8 +23,16 @@ Easy deployable system (API) for creating subscription based applications
 
 # Configuration
 
-Main fields is `SUBSCRIBY_AUTH_METHOD` and `SUBSCRIBY_AUTH_SECRET`
-where `SUBSCRIBY_AUTH_METHOD` should be `none` or `secret`, when you use `secret`, management API calls require user to pass `secret` field which should be equals to `SUBSCRIBY_AUTH_SECRET` (and `none` will not require any)
+- `SUBSCRIBY_AUTH_METHOD`: Auth methods to use (See `Authorization`)
+
+# Authorization
+
+- `none`: No additional authorization
+- `secret`: Require `secret` GET field or `Authorization` header (with or without `Bearer`) which should equals to `SUBSCRIBY_AUTH_SECRET`
+
+# Frontends
+
+- Telegram bot [`frontends/telegram`](frontends/telegram)
 
 # Features
 
