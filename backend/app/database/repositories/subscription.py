@@ -2,6 +2,7 @@ from secrets import token_urlsafe
 from datetime import timedelta, datetime
 
 from sqlalchemy.orm import Session
+
 from app.database.models.subscription import Subscription
 
 from .base import SQLRepository
@@ -27,8 +28,7 @@ class SubscriptionRepository(SQLRepository):
         subscription = Subscription(
             secret_key=secret_key, expires_at=expires_at, payload=payload
         )
-        self.db.add(subscription)
-        self.db.commit()
+        self.add_and_commit(subscription)
         return subscription
 
     def get(self, secret_key: str) -> Subscription | None:
@@ -41,12 +41,11 @@ class SubscriptionRepository(SQLRepository):
             .first()
         )
 
-    def revoke(self, secret_key: str) -> None:
+    def revoke(self, secret_key: str) -> Subscription | None:
         """
         Revokes subscription by it secret key and returns None (if not found) or subscription.
         """
         if model := self.get(secret_key=secret_key):
             model.is_active = False
-            self.db.add(model)
-            self.db.commit()
+            self.add_and_commit(model)
             return model

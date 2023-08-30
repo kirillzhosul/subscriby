@@ -1,6 +1,8 @@
+from typing import Type
 from abc import ABC
 
 from sqlalchemy.orm import Session
+
 from app.database.core import Base
 
 
@@ -22,7 +24,7 @@ class SQLRepository(BaseRepository):
     db: Session
     model: Base
 
-    def __init__(self, db: Session, model: Base) -> None:
+    def __init__(self, db: Session, model: Type[Base]) -> None:
         """
         Construct SQLRepository with given context (SQLAlchemy session and model).
         """
@@ -33,3 +35,7 @@ class SQLRepository(BaseRepository):
                 "SQL Repository expected database to be SQLAlchemy session!"
             )
         super().__init__()
+
+    def add_and_commit(self, model: Base) -> None:
+        self.db.add(model)
+        self.db.commit()

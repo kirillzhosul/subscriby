@@ -3,6 +3,7 @@
 """
 from starlette.exceptions import HTTPException
 from fastapi import Request
+
 from app.settings import Settings
 from app.plugins import CustomAuthPlugin
 
