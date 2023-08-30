@@ -43,9 +43,6 @@ def publish(
     """
     Create new subscription for given days and payload
     """
-    if payload != "{}":
-        payload = preprocess_payload(payload=payload)
-        return {"error": "Payload injection is not implemented yet"}
-    return serialize_subscription(repo.create(days=days, payload=payload)) | {
-        "days": days
-    }
+    return serialize_subscription(
+        repo.create(days=days, payload=preprocess_payload(payload=payload))
+    ) | {"days": days}
