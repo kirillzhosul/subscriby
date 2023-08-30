@@ -17,9 +17,7 @@ def serialize_subscription(subscription: Subscription | None = None) -> dict:
     if not isinstance(subscription, Subscription):
         return {"error": "Subscription with given ID not found"}
     expires_at = subscription.expires_at.replace(tzinfo=pytz.UTC)
-    expires_date = datetime.fromtimestamp(expires_at).strftime(
-        Settings().subscriby_expires_date_format
-    )
+    expires_date = expires_at.strftime(Settings().subscriby_expires_date_format)
     is_valid = (
         datetime.now().replace(tzinfo=pytz.UTC) < expires_at and subscription.is_active
     )
