@@ -14,7 +14,7 @@ def serialize_subscription(subscription: Subscription | None = None) -> dict:
     """
     Serializes subscription into dict or error if none.
     """
-    if subscription is None:
+    if not isinstance(subscription, Subscription):
         return {"error": "Subscription with given ID not found"}
     expires_at = subscription.expires_at.replace(tzinfo=pytz.UTC)
     expires_date = datetime.fromtimestamp(expires_at).strftime(

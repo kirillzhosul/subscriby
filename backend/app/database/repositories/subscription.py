@@ -29,7 +29,7 @@ class SubscriptionRepository(SQLRepository):
         )
         self.db.add(subscription)
         self.db.commit()
-        return Subscription()
+        return subscription
 
     def get(self, secret_key: str) -> Subscription | None:
         """
