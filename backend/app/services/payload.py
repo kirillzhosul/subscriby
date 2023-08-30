@@ -10,8 +10,6 @@ def preprocess_payload(payload: str) -> str:
     """
     Preprocesses payload via parsing and formatting back or raises error
     """
-    if payload == "{}":
-        return payload
     plugin = CustomPayloadPlugin()
     return str(plugin(payload=payload))
 

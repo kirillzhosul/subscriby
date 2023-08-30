@@ -2,7 +2,7 @@
 Custom plugin for payload validation / parsing
 """
 
-from pydantic import BaseModel
+from pydantic import ValidationError, BaseModel
 
 from .bases import BasePayloadPlugin
 
@@ -21,6 +21,9 @@ class CustomPayloadPlugin(BasePayloadPlugin):
     """
 
     def __call__(self, payload: str) -> str:
-        return CustomPayloadModel.model_validate_json(
-            json_data=payload
-        ).model_dump_json()
+        try:
+            return CustomPayloadModel.model_validate_json(
+                json_data=payload
+            ).model_dump_json()
+        except ValidationError:
+            return CustomPayloadModel().model_dump_json()
