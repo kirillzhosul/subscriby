@@ -42,6 +42,13 @@ Easy deployable system (API) for creating subscription based applications
 - Edit `.example.env` and copy to `.env`
 - Run `docker compose up -d` inside `backend` directory
 
+# Built stack
+
+- Python (FastAPI)
+- PostgreSQL (SQLAlchemy, Alembic)
+- Docker
+- Gunicorn with Uvicorn under the hood
+
 # Running behing a proxy
 
 Should be same as default deployment but you have to declare proxy to the API (Like, for NGINX)
