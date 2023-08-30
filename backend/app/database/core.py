@@ -53,7 +53,7 @@ def get_repository(repo_type: type[T]) -> Callable[[Session], T]:
     (Returns function that instantiates repository with given type)
     """
 
-    def wrapper(db: Session = Depends()) -> T:
+    def wrapper(db: Session = Depends(get_db)) -> T:
         return repo_type(db)  # type: ignore[call-arg]
 
     return wrapper
