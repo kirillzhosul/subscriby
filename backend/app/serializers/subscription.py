@@ -7,6 +7,7 @@ from datetime import datetime
 
 import pytz
 from app.settings import Settings
+from app.services.payload import parse_payload
 from app.database.models import Subscription
 
 
@@ -27,7 +28,7 @@ def serialize_subscription(subscription: Subscription | None = None) -> dict:
             "secret_key": subscription.secret_key,
             "expires_at": time.mktime(expires_at.timetuple()),
             "expires_date": expires_date,
-            "payload": subscription.payload,
+            "payload": parse_payload(subscription.payload),
             "is_valid": is_valid,
         }
     }
