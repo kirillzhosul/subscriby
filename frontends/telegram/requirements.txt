@@ -1,4 +1,8 @@
 # Framework
-aiogram==2.25.1
+aiogram==3.1.1
+
 # Stuff
 requests==2.31.0
+
+# Environment settings management
+pydantic_settings==2.0.3
