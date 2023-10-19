@@ -3,7 +3,7 @@ from typing import Collection, Union
 from aiogram.filters import Filter
 from aiogram.types import User
 
-from app.telegram.app.models.role import UserRole
+from app.models.role import UserRole
 
 
 class RoleFilter(Filter):

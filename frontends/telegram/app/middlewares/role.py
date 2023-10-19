@@ -3,7 +3,7 @@ from typing import Any, Awaitable, Callable, Dict, List
 from aiogram import BaseMiddleware
 from aiogram.types import TelegramObject
 
-from app.telegram.app.models.role import UserRole
+from app.models.role import UserRole
 
 
 class RoleMiddleware(BaseMiddleware):

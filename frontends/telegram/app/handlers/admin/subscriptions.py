@@ -4,11 +4,11 @@ from aiogram.filters import StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
-from app.telegram.app.filters.role import RoleFilter
-from app.telegram.app.keyboards.reply.admin import main_kb
-from app.telegram.app.models.role import UserRole
-from app.telegram.app.settings import Settings
-from app.telegram.app.states import PublishSubscription
+from app.filters.role import RoleFilter
+from app.keyboards.reply.admin import main_kb
+from app.models.role import UserRole
+from app.settings import Settings
+from app.states import PublishSubscription
 
 router = Router(name=__name__)
 # Apply RoleFilter to all router's handlers
