@@ -8,7 +8,7 @@ from app.models.role import UserRole
 
 class RoleMiddleware(BaseMiddleware):
     def __init__(self, admin_list: List[int]):
-        self.admin_list = [admin_list]
+        self.admin_list = admin_list
 
     async def __call__(
         self,
