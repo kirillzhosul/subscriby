@@ -2,9 +2,9 @@ from aiogram import Router
 from aiogram.filters import CommandStart
 from aiogram.types import Message
 
-from frontends.telegram.app.keyboards.reply.admin import main_kb
-from frontends.telegram.app.filters.role import RoleFilter
-from frontends.telegram.app.models.role import UserRole
+from app.telegram.app.filters.role import RoleFilter
+from app.telegram.app.keyboards.reply.admin import main_kb
+from app.telegram.app.models.role import UserRole
 
 router = Router(name=__name__)
 

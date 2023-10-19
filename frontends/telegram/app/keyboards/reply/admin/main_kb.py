@@ -1,7 +1,7 @@
 """
     Keyboards for Telegram.
 """
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
 
 # Button names.
 BUTTON_CREATE_NEW = "🛒 Create new"
@@ -12,11 +12,10 @@ def get():
     """
     Keyboard for the main menu.
     """
-    keyboard = ReplyKeyboardMarkup(
+    return ReplyKeyboardMarkup(
         keyboard=[
             [KeyboardButton(text=BUTTON_CREATE_NEW)],
-            [KeyboardButton(text=BUTTON_REVOKE_OLD)]
+            [KeyboardButton(text=BUTTON_REVOKE_OLD)],
         ],
-        resize_keyboard=True
+        resize_keyboard=True,
     )
-    return keyboard

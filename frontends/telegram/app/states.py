@@ -1,7 +1,7 @@
 """
     States for the Telegram.
 """
-from aiogram.fsm.state import StatesGroup, State
+from aiogram.fsm.state import State, StatesGroup
 
 
 class PublishSubscription(StatesGroup):

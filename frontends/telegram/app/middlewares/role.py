@@ -1,9 +1,9 @@
-from typing import Callable, Dict, Any, Awaitable, List
+from typing import Any, Awaitable, Callable, Dict, List
 
 from aiogram import BaseMiddleware
 from aiogram.types import TelegramObject
 
-from frontends.telegram.app.models.role import UserRole
+from app.telegram.app.models.role import UserRole
 
 
 class RoleMiddleware(BaseMiddleware):
@@ -14,7 +14,7 @@ class RoleMiddleware(BaseMiddleware):
         self,
         handler: Callable[[TelegramObject, Dict[str, Any]], Awaitable[Any]],
         event: TelegramObject,
-        data: Dict[str, Any]
+        data: Dict[str, Any],
     ) -> Any:
         if not getattr(event, "from_user", None):
             data["role"] = None

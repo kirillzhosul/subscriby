@@ -1,12 +1,12 @@
 """
     Main Telegram bot for Subscriby.
 """
+from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
-from aiogram import Dispatcher, Bot
 
-from .settings import Settings
-from .middlewares.role import RoleMiddleware
 from .handlers import admin, user
+from .middlewares.role import RoleMiddleware
+from .settings import Settings
 
 
 async def main() -> None:
@@ -17,8 +17,12 @@ async def main() -> None:
     bot = Bot(token=token, parse_mode="html")
     dp = Dispatcher(storage=MemoryStorage())
 
-    dp.message.outer_middleware(RoleMiddleware(admin_list=Settings().subscriby_telegram_admin_ids))
-    dp.callback_query.outer_middleware(RoleMiddleware(admin_list=Settings().subscriby_telegram_admin_ids))
+    dp.message.outer_middleware(
+        RoleMiddleware(admin_list=Settings().subscriby_telegram_admin_ids)
+    )
+    dp.callback_query.outer_middleware(
+        RoleMiddleware(admin_list=Settings().subscriby_telegram_admin_ids)
+    )
 
     dp.include_routers(
         admin.router,

@@ -1,15 +1,14 @@
 import requests
-
-from aiogram import Router, F
+from aiogram import F, Router
 from aiogram.filters import StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
-from frontends.telegram.app.states import PublishSubscription
-from frontends.telegram.app.settings import Settings
-from frontends.telegram.app.keyboards.reply.admin import main_kb
-from frontends.telegram.app.filters.role import RoleFilter
-from frontends.telegram.app.models.role import UserRole
+from app.telegram.app.filters.role import RoleFilter
+from app.telegram.app.keyboards.reply.admin import main_kb
+from app.telegram.app.models.role import UserRole
+from app.telegram.app.settings import Settings
+from app.telegram.app.states import PublishSubscription
 
 router = Router(name=__name__)
 # Apply RoleFilter to all router's handlers
@@ -33,7 +32,9 @@ def _api_call(method: str, params: dict) -> dict | None:
 
 @router.message(F.text == main_kb.BUTTON_REVOKE_OLD)
 async def start_revoke_subscription(message: Message) -> None:
-    await message.answer("Revoking is not implemented yet...", reply_markup=main_kb.get())
+    await message.answer(
+        "Revoking is not implemented yet...", reply_markup=main_kb.get()
+    )
 
 
 @router.message(F.text == main_kb.BUTTON_CREATE_NEW)
