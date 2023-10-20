@@ -1,5 +1,5 @@
 """
-    Payload processing service.
+    Payload processing service
 """
 from json import loads
 
@@ -16,6 +16,6 @@ def preprocess_payload(payload: str) -> str:
 
 def parse_payload(payload: str) -> dict:
     """
-    Parses payload and returns dict out of that.
+    Parses payload and returns dict out of that
     """
     return loads(payload)

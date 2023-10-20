@@ -1,13 +1,14 @@
 """
-    Core service for database, dependencies, engine and etc.
+    Core service for database, dependencies, engine and etc
 """
-from typing import TypeVar, Callable
+from typing import Callable, TypeVar
 
-from sqlalchemy.pool import QueuePool
-from sqlalchemy.orm import sessionmaker, Session
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import create_engine, MetaData
 from fastapi import Depends
+from sqlalchemy import MetaData, create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.pool import QueuePool
+
 from app.settings import Settings
 
 T = TypeVar("T")
@@ -31,14 +32,14 @@ SessionLocal = sessionmaker(
 
 def create_all() -> None:
     """
-    Current alternative to migration, will create all required database tables.
+    Current alternative to migration, will create all required database tables
     """
     metadata.create_all(bind=engine)
 
 
 def get_db() -> sessionmaker:  # type: ignore[misc]
     """
-    Returns database session for making plain database requests.
+    Returns database session for making plain database requests
     """
     db_session = SessionLocal()
     try:
@@ -49,7 +50,7 @@ def get_db() -> sessionmaker:  # type: ignore[misc]
 
 def get_repository(repo_type: type[T]) -> Callable[[Session], T]:
     """
-    Instantiates repository dependency (wrapped) based on type.
+    Instantiates repository dependency (wrapped) based on type
     (Returns function that instantiates repository with given type)
     """
 

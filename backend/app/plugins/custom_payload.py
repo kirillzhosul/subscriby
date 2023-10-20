@@ -2,14 +2,14 @@
 Custom plugin for payload validation / parsing
 """
 
-from pydantic import ValidationError, BaseModel
+from pydantic import BaseModel, ValidationError
 
 from .bases import BasePayloadPlugin
 
 
 class CustomPayloadModel(BaseModel):
     """
-    Model that represents custom payload filter.
+    Model that represents custom payload filter
     """
 
     version: int = 1

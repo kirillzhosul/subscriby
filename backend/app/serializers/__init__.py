@@ -1,5 +1,6 @@
 """
-    System for serializing stuff into response dict, should be models (Pydantic).
+    System for serializing stuff into response dict, should be refactored into models (Pydantic)
+    TODO: Refactor into models (Pydantic)
 """
 
 from .subscription import serialize_subscription

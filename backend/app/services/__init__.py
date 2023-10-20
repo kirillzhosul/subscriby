@@ -1,8 +1,8 @@
 """
-    Business logic services.
+    Business logic services
 """
 
-from .payload import preprocess_payload
 from .auth import AuthDependency
+from .payload import preprocess_payload
 
 __all__ = ["AuthDependency", "preprocess_payload"]

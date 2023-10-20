@@ -1,5 +1,9 @@
-from typing import Type
+"""
+    Base repository for other implementations
+"""
+
 from abc import ABC
+from typing import Type
 
 from sqlalchemy.orm import Session
 
@@ -8,11 +12,9 @@ from app.database.core import Base
 
 class BaseRepository(ABC):
     """
-    Base repository without any implementation.
-    Pretty weird.
+    Base repository without any implementation
+    Pretty weird
     """
-
-    pass
 
 
 class SQLRepository(BaseRepository):
@@ -26,7 +28,7 @@ class SQLRepository(BaseRepository):
 
     def __init__(self, db: Session, model: Type[Base]) -> None:
         """
-        Construct SQLRepository with given context (SQLAlchemy session and model).
+        Construct SQLRepository with given context (SQLAlchemy session and model)
         """
         self.db = db
         self.model = model
@@ -37,5 +39,8 @@ class SQLRepository(BaseRepository):
         super().__init__()
 
     def add_and_commit(self, model: Base) -> None:
+        """
+        Adds model and commits that right now
+        """
         self.db.add(model)
         self.db.commit()

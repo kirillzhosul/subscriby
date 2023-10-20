@@ -7,11 +7,9 @@ gunicorn==20.1.0
 # Database
 sqlalchemy==1.4.45
 psycopg2-binary==2.9.7
-alembic==1.11.3
 
 # Environment settings management
 pydantic_settings==2.0.3
 
 # Utils
 pytz==2023.3
-python-dateutil==2.8.2 # Alembic requires that!

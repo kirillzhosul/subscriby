@@ -2,12 +2,12 @@
     Router for subscription methods
 """
 
-from fastapi import Depends, APIRouter
-from app.services import preprocess_payload, AuthDependency
-from app.serializers import serialize_subscription
-from app.plugins import CustomPayloadPlugin
-from app.database.repositories.subscription import SubscriptionRepository
+from fastapi import APIRouter, Depends
+
 from app.database.core import get_repository
+from app.database.repositories.subscription import SubscriptionRepository
+from app.serializers import serialize_subscription
+from app.services import AuthDependency, preprocess_payload
 
 router = APIRouter(prefix="/subscription")
 
@@ -36,7 +36,7 @@ def revoke(
 
 @router.get("/publish", dependencies=[Depends(AuthDependency())])
 def publish(
-    days: int = 3,
+    days: int | None = 3,
     payload: str = "{}",
     repo: SubscriptionRepository = Depends(get_repository(SubscriptionRepository)),
 ):

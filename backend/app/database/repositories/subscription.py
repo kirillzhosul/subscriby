@@ -1,32 +1,34 @@
+"""
+    Repository to deal with subscriptions
+"""
+from datetime import datetime, timedelta
 from secrets import token_urlsafe
-from datetime import timedelta, datetime
+from typing import Callable
 
-from sqlalchemy.orm import Session
-
-from app.database.models.subscription import Subscription
+from sqlalchemy import func, or_
+from sqlalchemy.orm import Query, Session
 
 from .base import SQLRepository
+from app.database.models.subscription import Subscription
 
 
 class SubscriptionRepository(SQLRepository):
     """
-    Repository to deal with Subscription.
+    Repository to deal with Subscription
     """
 
     def __init__(self, db: Session) -> None:
         super().__init__(db, Subscription)
 
-    def create(self, days: int, payload="{}") -> Subscription:
+    def create(self, days: int, payload: str = "{}") -> Subscription:
         """
-        Create, commit and return new subscription.
+        Create, commit and return new subscription
         """
-        # Model fields
-        expires_at = datetime.now() + timedelta(days=days)
-        secret_key = token_urlsafe(24)
-
-        # Commit
+        expires_at = (datetime.now() + timedelta(days=days)) if days != 0 else None
         subscription = Subscription(
-            secret_key=secret_key, expires_at=expires_at, payload=payload
+            secret_key=token_urlsafe(24),
+            expires_at=expires_at,
+            payload=payload,
         )
         self.add_and_commit(subscription)
         return subscription
@@ -49,3 +51,115 @@ class SubscriptionRepository(SQLRepository):
             model.is_active = False
             self.add_and_commit(model)
             return model
+
+    def get_count_for_period(
+        self, days: int, *, _ext_filter: Callable[[Query], Query] | None = None
+    ) -> dict[int, int]:
+        """
+        Returns count of subscriptions created within each day within period in days
+        """
+        if not _ext_filter:
+            _ext_filter = lambda query: query
+
+        today = datetime(datetime.now().year, datetime.now().month, datetime.now().day)
+        delta = timedelta(days=days)
+        items = {-i: 0 for i in range(days)}
+        for i, v in enumerate(
+            _ext_filter(
+                self.db.query(
+                    func.date(Subscription.created_at), func.count(Subscription.id)
+                )
+                .group_by(func.date(Subscription.created_at))
+                .filter(Subscription.created_at >= today - delta)
+                .filter(Subscription.created_at <= today + timedelta(days=1))
+            ).all()
+        ):
+            items[-i] = v[1]
+        return items
+
+    def get_revoked_for_period(self, days: int) -> dict[int, int]:
+        """
+        Returns revoked count of subscriptions created within each day within period in days
+        """
+        return self.get_count_for_period(
+            days=days,
+            _ext_filter=lambda query: query.filter(not Subscription.is_active),
+        )
+
+    def get_active_for_period(self, days: int) -> dict[int, int]:
+        """
+        Returns active count of subscriptions created within each day within period in days
+        """
+        return self.get_count_for_period(
+            days=days, _ext_filter=lambda query: query.filter(Subscription.is_active)
+        )
+
+    def get_valid_for_period(self, days: int) -> dict[int, int]:
+        # sourcery skip: none-compare
+        """
+        Returns valid count of subscriptions created within each day within period in days
+        """
+        return self.get_count_for_period(
+            days=days,
+            _ext_filter=lambda query: query.filter(Subscription.is_active).filter(
+                or_(
+                    Subscription.expires_at > datetime.now(),
+                    Subscription.expires_at == None,
+                )
+            ),
+        )
+
+    def get_expired_for_period(self, days: int) -> dict[int, int]:
+        """
+        Returns expired count of subscriptions created within each day within period in days
+        """
+        return self.get_count_for_period(
+            days=days,
+            _ext_filter=lambda query: query.filter(
+                Subscription.expires_at <= datetime.now()
+            ),
+        )
+
+    def get_revoked_count(self) -> int:
+        """
+        Get count for all revoked subscriptions
+        """
+        return self.db.query(Subscription).filter(not Subscription.is_active).count()
+
+    def get_expired_count(self) -> int:
+        """
+        Get expired count for all revoked subscriptions
+        """
+        return (
+            self.db.query(Subscription)
+            .filter(Subscription.expires_at <= datetime.now())
+            .count()
+        )
+
+    def get_active_count(self) -> int:
+        """
+        Get count for all active subscriptions
+        """
+        return self.db.query(Subscription).filter(Subscription.is_active).count()
+
+    def get_valid_count(self) -> int:
+        """
+        Get count for all valid subscriptions
+        """
+        return (
+            self.db.query(Subscription)
+            .filter(Subscription.is_active)
+            .filter(
+                or_(
+                    Subscription.expires_at > datetime.now(),
+                    Subscription.expires_at == None,
+                )
+            )
+            .count()
+        )
+
+    def get_count(self) -> int:
+        """
+        Get count for all subscriptions
+        """
+        return self.db.query(Subscription).count()

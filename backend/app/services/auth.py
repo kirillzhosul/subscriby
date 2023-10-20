@@ -1,16 +1,16 @@
 """
-    Service to deal with auth system.
+    Service to deal with auth system
 """
-from starlette.exceptions import HTTPException
 from fastapi import Request
+from starlette.exceptions import HTTPException
 
-from app.settings import Settings
 from app.plugins import CustomAuthPlugin
+from app.settings import Settings
 
 
 class AuthDependency:
     """
-    Checks authorization based on configuration.
+    Checks authorization based on configuration
     """
 
     def _get_secret_from_request(self, req: Request) -> str:

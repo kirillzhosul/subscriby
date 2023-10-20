@@ -1,14 +1,15 @@
 """
-    Subscription serializer.
+    Subscription serializer
 """
 
 import time
 from datetime import datetime
 
 import pytz
-from app.settings import Settings
-from app.services.payload import parse_payload
+
 from app.database.models import Subscription
+from app.services.payload import parse_payload
+from app.settings import Settings
 
 
 def serialize_subscription(subscription: Subscription | None = None) -> dict:
@@ -17,16 +18,18 @@ def serialize_subscription(subscription: Subscription | None = None) -> dict:
     """
     if not isinstance(subscription, Subscription):
         return {"error": "Subscription with given ID not found"}
-    expires_at = subscription.expires_at.replace(tzinfo=pytz.UTC)
-    expires_date = expires_at.strftime(Settings().subscriby_expires_date_format)
-    is_valid = (
-        datetime.now().replace(tzinfo=pytz.UTC) < expires_at and subscription.is_active
-    )
-
+    expires_date = None
+    expires_at = None
+    is_valid = subscription.is_active
+    if subscription.expires_at:
+        expires_at: datetime = subscription.expires_at.replace(tzinfo=pytz.UTC)
+        expires_date = expires_at.strftime(Settings().subscriby_expires_date_format)
+        is_valid &= datetime.now().replace(tzinfo=pytz.UTC) < expires_at
+        expires_at: float = time.mktime(expires_at.timetuple())
     return {
         "subscription": {
             "secret_key": subscription.secret_key,
-            "expires_at": time.mktime(expires_at.timetuple()),
+            "expires_at": expires_at,
             "expires_date": expires_date,
             "payload": parse_payload(subscription.payload),
             "is_valid": is_valid,

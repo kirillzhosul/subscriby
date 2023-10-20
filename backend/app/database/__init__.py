@@ -1,8 +1,8 @@
 """
-    Database module with models / services.
+    Database module with models / repositories
 """
 
-from .core import get_db
 from . import models
+from .core import get_db
 
 __all__ = ["models", "get_db"]

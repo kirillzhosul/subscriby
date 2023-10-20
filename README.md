@@ -32,7 +32,17 @@ Easy deployable system (API) for creating subscription based applications
 - Creating new subscriptions
 - Checking subscription status
 - Revoking subscriptions
+- Analytics (KPI, even for your payload via plugin)
+- Custom payload injected within subscriptions
 - Auth for system methods (publish, revoke)
+
+# Plugins
+
+There is support for custom plugins for:
+
+- Auth (Check own custom auth)
+- Payload (Inject custom payload with or without validation)
+- Analytics (Inject own KPI trackers)
 
 # Deployment
 
@@ -45,7 +55,7 @@ Easy deployable system (API) for creating subscription based applications
 # Built stack
 
 - Python (FastAPI)
-- PostgreSQL (SQLAlchemy, Alembic)
+- PostgreSQL (SQLAlchemy)
 - Docker
 - Gunicorn with Uvicorn under the hood
 
