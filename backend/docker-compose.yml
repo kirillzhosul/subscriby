@@ -1,40 +1,30 @@
 version: "3"
 
-volumes:
-  db:
-    driver: local
-
 services:
-  server:
+  backend:
     hostname: subscriby
+    container_name: subscriby_backend
     restart: unless-stopped
+    env_file: .env
     ports:
       - "${COMPOSE_EXPOSED_PORT}:${PROC_BIND_PORT}"
-    build: .
-    networks:
-      - subscriby
-    env_file: ".env"
     links:
       - database
     depends_on:
       - database
-    command: "gunicorn 'app.app:create_application()' -c gunicorn.conf.py"
+    build: .
+    command: "poetry run gunicorn 'app.app:create_application()' -c gunicorn.conf.py"
   database:
-    env_file: ".env"
     image: postgres:14-alpine
     hostname: subscriby
-    networks:
-      - subscriby
+    container_name: subscriby_database
     restart: unless-stopped
+    env_file: .env
     volumes:
       - ../db:/var/lib/postgresql/data
     command:
       - "postgres"
-      - "-c" # Max connection limit for database.
-      - "max_connections=1000" # SHOW max_connections;
-      - "-c" # Buffer size for database bufferization.
-      - "shared_buffers=128MB" # SHOW shared_buffers;
-
-networks:
-  subscriby:
-    name: subscriby
+      - "-c"
+      - "max_connections=1000"
+      - "-c"
+      - "shared_buffers=128MB"

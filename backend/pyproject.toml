@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "subscriby-backend"
+version = "0.1.0"
+description = "Easy deployable system (API) for creating subscription based applications"
+authors = ["Kirill Zhosul <kirillzhosul@florgon.com>"]
+maintainers = ["Kirill Zhosul <kirillzhosul@florgon.com>"]
+homepage = "https://github.com/kirillzhosul/subscriby"
+repository = "https://github.com/kirillzhosul/subscriby"
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "0.101.1"
+uvicorn = "^0.22.0"
+gunicorn = "^20.1.0"
+sqlalchemy = "1.4.45"
+psycopg2-binary = "^2.9.7"
+pydantic_settings = "^2.0.3"
+pytz = "^2023.3"
+aiohttp = "^3.8.6"
+requests = "2.31.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
