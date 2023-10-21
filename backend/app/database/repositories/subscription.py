@@ -128,7 +128,7 @@ class SubscriptionRepository(SQLRepository):
 
     def get_expired_count(self) -> int:
         """
-        Get expired count for all revoked subscriptions
+        Get count for all expired subscriptions
         """
         return (
             self.db.query(Subscription)
@@ -157,6 +157,30 @@ class SubscriptionRepository(SQLRepository):
             )
             .count()
         )
+
+    def get_total_kpi_counters(self) -> dict:
+        """
+        Returns dict for KPI counters for whole time
+        """
+        return {
+            "all": self.get_count(),
+            "valid": self.get_valid_count(),
+            "revoked": self.get_revoked_count(),
+            "expired": self.get_expired_count(),
+            "active": self.get_active_count(),
+        }
+
+    def get_period_kpi_counters(self, days: int) -> dict:
+        """
+        Returns dict for KPI counters for period in days
+        """
+        return {
+            "all": self.get_count_for_period(days),
+            "valid": self.get_valid_for_period(days),
+            "revoked": self.get_revoked_for_period(days),
+            "expired": self.get_expired_for_period(days),
+            "active": self.get_active_for_period(days),
+        }
 
     def get_count(self) -> int:
         """
