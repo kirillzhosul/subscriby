@@ -2,7 +2,6 @@
     Webhook system that is used for notifying configured targets about events
     TODO: Refactor with fallback stored system
 """
-import asyncio
 import time
 
 from aiohttp import request
@@ -28,7 +27,7 @@ async def broadcast_webhook_event(name: str, payload: dict) -> None:
     """
     Tries to emit given webhook event to all configured targets
     """
-    targets = Settings().subscriby_webhook_targets
+    targets = Settings().webhook_targets
     logger.info(f"[webhooks] Broadcasting event {name} to {len(targets)} targets...")
 
     event = {
@@ -38,8 +37,5 @@ async def broadcast_webhook_event(name: str, payload: dict) -> None:
             "at": time.time(),
         }
     }
-    tasks = [
-        asyncio.ensure_future(notify_webhook_target(target, event))
-        for target in targets
-    ]
-    await asyncio.wait(tasks)
+    for target in targets:
+        _notify_webhook_target(target, event)

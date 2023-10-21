@@ -56,7 +56,7 @@ def get_kpi_for_period(
             {v: counters[v][k] for v in counters.keys()}
             | {
                 "date": (datetime.now() - timedelta(days=abs(k))).strftime(
-                    Settings().subscriby_date_format
+                    Settings().date_format
                 )
             }
         )

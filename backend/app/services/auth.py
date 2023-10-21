@@ -19,12 +19,12 @@ class AuthDependency:
         return secret.removeprefix("Bearer ")
 
     def __call__(self, req: Request) -> bool:
-        match Settings().subscriby_auth_method:
+        match Settings().auth_method:
             case "none":
                 pass  # No authorization -> no checks
             case "secret":
                 # -> User required to send secret key
-                required_secret = Settings().subscriby_auth_secret
+                required_secret = Settings().auth_secret
                 if self._get_secret_from_request(req) != required_secret:
                     raise HTTPException(status_code=401)
                 return True
