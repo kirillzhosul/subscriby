@@ -5,6 +5,7 @@ from aiogram.types import Message
 from app.filters.role import RoleFilter
 from app.keyboards.reply.admin import main_kb
 from app.models.role import UserRole
+from app.texts import T
 
 router = Router(name=__name__)
 
@@ -16,6 +17,6 @@ async def start_command(message: Message) -> None:
     Handler for `/start` command.
     """
     await message.answer(
-        f"Welcome to <b>Subscriby</b>, <i>{message.from_user.full_name}</i>!",
+        T["welcome"].format(message.from_user.full_name),
         reply_markup=main_kb.get(),
     )

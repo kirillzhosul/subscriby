@@ -3,9 +3,12 @@
 """
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
 
+from app.texts import T
+
 # Button names.
-BUTTON_CREATE_NEW = "🛒 Create new"
-BUTTON_REVOKE_OLD = "🔸 Revoke old"
+BUTTON_CREATE_NEW = T["btn_create"]
+BUTTON_REVOKE_OLD = T["btn_revoke"]
+BUTTON_KPI_ANALYTICS = T["btn_kpi"]
 
 
 def get():
@@ -16,6 +19,7 @@ def get():
         keyboard=[
             [KeyboardButton(text=BUTTON_CREATE_NEW)],
             [KeyboardButton(text=BUTTON_REVOKE_OLD)],
+            [KeyboardButton(text=BUTTON_KPI_ANALYTICS)],
         ],
         resize_keyboard=True,
     )

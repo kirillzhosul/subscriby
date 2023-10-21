@@ -15,3 +15,4 @@ class Settings(BaseSettings):
     subscriby_api_url: str
     subscriby_telegram_admin_ids: list[int]
     subscriby_telegram_token: str
+    subscriby_telegram_language: str = "EN"
