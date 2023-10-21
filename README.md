@@ -9,15 +9,13 @@ Easy deployable system (API) for creating subscription based applications
 
 # How to use
 
-- Deploy API on the your server (WIP: Cloud delivered usage)
+- Deploy API on the your server
 - Query your subscription key from user inside your application (fetch API call)
 - Create and manage new subscription for users (by hand, implementing own management tool, or use premade inside `frontends` directory)
 
-# Configuration
-
-- `SUBSCRIBY_AUTH_METHOD`: Auth methods to use (See `Authorization`)
-
 # Authorization
+
+`SUBSCRIBY_AUTH_METHOD` Auth methods to use
 
 - `none`: No additional authorization
 - `secret`: Require `secret` GET field or `Authorization` header (with or without `Bearer`) which should equals to `SUBSCRIBY_AUTH_SECRET`
@@ -35,6 +33,7 @@ Easy deployable system (API) for creating subscription based applications
 - Analytics (KPI, even for your payload via plugin)
 - Custom payload injected within subscriptions
 - Auth for system methods (publish, revoke)
+- Webhook notification for clients
 
 # Plugins
 
@@ -49,7 +48,7 @@ There is support for custom plugins for:
 (How to deploy API)
 
 - Do `git clone` on your server
-- Edit `.example.env` and copy to `.env`
+- Edit `backend/.example.env` and copy to `.env`
 - Run `docker compose up -d` inside `backend` directory
 
 # Built stack

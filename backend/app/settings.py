@@ -39,4 +39,4 @@ class DatabaseSettings(BaseSettings):
 
     @property
     def raw_url(self) -> str:
-        return f"{self.postgres_user}:{self.postgres_password}@{self.postgres_host}:{self.postgres_port}/{self.postgres_name}"
+        return f"{self.user}:{self.password}@{self.host}:{self.port}/{self.name}"
