@@ -13,6 +13,8 @@ class CustomPayloadModel(BaseModel):
     """
 
     version: int = 1
+    source: str | None = None
+    price: int | None = None
 
 
 class CustomPayloadPlugin(BasePayloadPlugin):

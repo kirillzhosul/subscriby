@@ -33,7 +33,9 @@ def revoke(
     """
     Revoke given subscription by secret
     """
-    return serialize_subscription(repo.revoke(secret_key=secret_key))
+    subscription = serialize_subscription(repo.revoke(secret_key=secret_key))
+    emit_webhook_event("subscription.revoke", subscription)
+    return subscription
 
 
 @router.get("/publish", dependencies=[Depends(AuthDependency())])
