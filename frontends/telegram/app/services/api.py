@@ -7,13 +7,20 @@ def api_call(method: str, params: dict) -> dict | None:
     """
     Calls API and returns JSON response or None if error.
     """
+    method_url = f"{Settings().subscriby_api_url}/{method}"
+    print(f"Calling {method_url}!")
     try:
-        method_url = f"{Settings().subscriby_api_url}/{method}"
-        request = requests.get(url=method_url, params=params).json()
-        if "error" in request:
-            print(f"[ERROR]: API respond with error: {request['error']}")
-            raise ValueError
-        return request
+        request = requests.get(url=method_url, params=params)
+    except requests.exceptions.RequestException as e:
+        return print(f"[ERROR]: Unable to send API request due to {e}!")
+    try:
+        json = request.json()
     except Exception as e:
-        print(f"[ERROR]: API unable to respond due to: {e}")
-        return None
+        return print(
+            f"[ERROR]: Unable to parse API JSON due to {e}, response: {request.text}!"
+        )
+
+    if "error" in json:
+        return print(f"[ERROR]: API respond with error: {json['error']}!")
+
+    return json

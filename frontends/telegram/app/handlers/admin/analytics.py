@@ -40,39 +40,43 @@ async def finish_kpi_analytics(message: Message, state: FSMContext) -> None:
     data = await state.get_data()
     try:
         days = int(data.get("days"))
-        if days <= 0:
+        if days <= 1:
             raise ValueError
     except ValueError:
         await message.answer(T["invalid_number"])
         return
-    request = api_call("analytics/kpi", {"period": days})
-    if request is None:
-        await message.answer(T["api_error"])
-        return
+    total_kpi = api_call("analytics/kpi/total", {})
+    if total_kpi is None:
+        return await message.answer(T["api_error"])
+    period_kpi = api_call("analytics/kpi/period", {"days": days})
+    if period_kpi is None:
+        return await message.answer(T["api_error"])
 
-    period_kpi = request["kpi"]["for_period"]
+    periods = dict(period_kpi["kpi"]["periods"])
     period_chunks = "\n".join(
         [
-            T["kpi_period_header"].format(
-                (datetime.now() - timedelta(days=abs(int(key)))).strftime("%d/%m/%Y")
-            )
+            T["kpi_period_header"].format(periods[key]["date"])
             + _format_kpi_chunk(
                 {
-                    "revoked": period_kpi["revoked"][key],
-                    "active": period_kpi["active"][key],
-                    "valid": period_kpi["valid"][key],
-                    "expired": period_kpi["expired"][key],
-                    "all": period_kpi["all"][key],
+                    "revoked": periods[key]["revoked"],
+                    "active": periods[key]["active"],
+                    "valid": periods[key]["valid"],
+                    "expired": periods[key]["expired"],
+                    "all": periods[key]["all"],
                 }
             )
-            for key in dict(request["kpi"]["for_period"]["all"])
+            for key in periods
         ]
     )
     await message.answer(
         T["kpi_base"].format(
-            _format_kpi_chunk(request["kpi"]["for_total"]),
-            request["period"],
+            total_kpi["kpi"]["percents"]["revoked"],
+            total_kpi["kpi"]["percents"]["expired"],
+            total_kpi["kpi"]["percents"]["valid"],
+            _format_kpi_chunk(total_kpi["kpi"]["counters"]),
+            period_kpi["period_days"],
             period_chunks,
+            period_kpi["kpi"]["percents"]["published_average"],
         )
     )
     await state.clear()
