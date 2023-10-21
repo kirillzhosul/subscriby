@@ -9,7 +9,7 @@ class PublishSubscription(StatesGroup):
     payload = State()
 
 
-class RevokeSubscriptions(StatesGroup):
+class RevokeSubscription(StatesGroup):
     key = State()
 
 

@@ -12,6 +12,7 @@ LANGUAGES: dict[str, dict[str, str]] = {
         "btn_create": "🛒 Выдать ключ",
         "btn_revoke": "🔸 Отозвать ключ",
         "btn_kpi": "📈 KPI аналитика",
+        "enter_key_to_revoke": "Введите ключ который хотите отозвать",
         "kpi_base": """
 📈 <b><u>KPI аналитика</u></b>:\n
 <b>Статистика:</b>\n
@@ -35,6 +36,10 @@ LANGUAGES: dict[str, dict[str, str]] = {
 🗓 Валиден до: {1}
 💉 Полезная нагрузка: {2}
 """,
+        "subscription_revoked": """
+⏸ Ключ <code>{0}</code> отозван!
+💉 Полезная нагрузка: {1}
+""",
     },
     "EN": {
         "not_admin": "<b>Sorry, you are not an admin!</b>",
@@ -47,6 +52,7 @@ LANGUAGES: dict[str, dict[str, str]] = {
         "btn_create": "🛒 Create new",
         "btn_revoke": "🔸 Revoke old",
         "btn_kpi": "📈 KPI analytics",
+        "enter_key_to_revoke": "Enter key which you wish to revoke",
         "kpi_base": """
 📈 <b><u>KPI analytics</u></b>:\n
 <b>Statistics:</b>\n
@@ -69,6 +75,10 @@ Mean for period: {6}\n
 ✅ Key <code>{0}</code> created!
 🗓 Valid until: {1}
 💉 Injected payload: {2}
+""",
+        "subscription_revoked": """
+⏸ Key <code>{0}</code> revoked!
+💉 Injected payload: {1}
 """,
     },
 }
