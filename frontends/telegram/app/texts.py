@@ -25,6 +25,11 @@ LANGUAGES: dict[str, dict[str, str]] = {
 \tИстекли: {3}
 \tОтозваны: {4}
 """,
+        "subscription_created": """
+✅ Ключ <code>{0}</code> выдан!
+🗓 Валиден до: {1}
+💉 Полезная нагрузка: {2}
+""",
     },
     "EN": {
         "not_admin": "<b>Sorry, you are not an admin!</b>",
@@ -49,6 +54,11 @@ LANGUAGES: dict[str, dict[str, str]] = {
 \tActive: {2}
 \tExpired: {3}
 \tRevoked: {4}
+""",
+        "subscription_created": """
+✅ Key <code>{0}</code> created!
+🗓 Valid until: {1}
+💉 Injected payload: {2}
 """,
     },
 }

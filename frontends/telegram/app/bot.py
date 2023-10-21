@@ -1,6 +1,7 @@
 """
     Main Telegram bot for Subscriby.
 """
+
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 
@@ -9,10 +10,7 @@ from .middlewares.role import RoleMiddleware
 from .settings import Settings
 
 
-async def main() -> None:
-    """
-    Entry point of the bot, should be ran with Docker
-    """
+def main_init() -> tuple[Bot, Dispatcher]:
     token = Settings().subscriby_telegram_token
     bot = Bot(token=token, parse_mode="html")
     dp = Dispatcher(storage=MemoryStorage())
@@ -29,4 +27,4 @@ async def main() -> None:
         user.router,
     )
 
-    await dp.start_polling(bot)
+    return bot, dp
