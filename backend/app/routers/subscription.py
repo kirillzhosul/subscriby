@@ -8,6 +8,7 @@ from app.database.core import get_repository
 from app.database.repositories.subscription import SubscriptionRepository
 from app.serializers import serialize_subscription
 from app.services import AuthDependency, preprocess_payload
+from app.services.webhook import emit_webhook_event
 
 router = APIRouter(prefix="/subscription")
 
@@ -20,6 +21,7 @@ def check(
     """
     Check that given subscription is exists and valid
     """
+
     return serialize_subscription(repo.get(secret_key=secret_key))
 
 
@@ -43,6 +45,9 @@ def publish(
     """
     Create new subscription for given days and payload
     """
-    return serialize_subscription(
+    subscription = serialize_subscription(
         repo.create(days=days, payload=preprocess_payload(payload=payload))
     ) | {"days": days}
+
+    emit_webhook_event("subscription.publish", subscription)
+    return subscription

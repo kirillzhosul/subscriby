@@ -15,9 +15,11 @@ class Settings(BaseSettings):
     postgres_password: str = "subscriby"
     postgres_host: str = "localhost"
     postgres_port: int = 5432
+
     subscriby_auth_method: str = "none"
     subscriby_auth_secret: str | None = None  # For `secret` auth method.
-    subscriby_expires_date_format: str = "%Y.%m.%d"
+    subscriby_date_format: str = "%Y.%m.%d"
+    subscriby_webhook_targets: list[str] = []
 
     @property
     def database_url(self) -> str:

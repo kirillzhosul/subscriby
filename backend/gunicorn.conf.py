@@ -28,7 +28,7 @@ class GunicornSettings(BaseSettings):
     proc_log_to_stdout: bool = True
     proc_access_log: str = "-"
     proc_error_log: str = "-"
-    proc_log_level: str = "info"
+    proc_log_level: str = "debug"
     proc_timeout: int = 30
     proc_debug_config: bool = False
     proc_name: str = "florgon-api-gunicorn"
