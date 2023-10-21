@@ -4,7 +4,7 @@
 """
 import time
 
-from aiohttp import request
+from aiohttp import ClientSession, request
 from aiohttp.client_exceptions import ClientError
 
 from app.logger import logger
@@ -15,8 +15,11 @@ async def _notify_webhook_target(target: str, payload: dict) -> None:
     """
     Notifies single target about event webhook
     """
+
     try:
-        await request("POST", target, json=payload, allow_redirects=False)
+        async with ClientSession() as session:
+            async with session.post(target, json=payload, allow_redirects=False) as _:
+                pass
     except ClientError as e:
         logger.warning(
             "[webhooks] One of the targets is unable to respond!", exc_info=e
@@ -38,4 +41,4 @@ async def broadcast_webhook_event(name: str, payload: dict) -> None:
         }
     }
     for target in targets:
-        _notify_webhook_target(target, event)
+        await _notify_webhook_target(target, event)
