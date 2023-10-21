@@ -5,11 +5,7 @@ services:
     hostname: subscriby
     restart: unless-stopped
     build: .
-    networks:
-      - subscriby
+    ports:
+      - 3000:3000
     env_file: ".env"
     command: "python run.py"
-
-networks:
-  subscriby:
-    name: subscriby
