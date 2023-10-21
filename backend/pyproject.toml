@@ -19,7 +19,6 @@ psycopg2-binary = "^2.9.7"
 pydantic_settings = "^2.0.3"
 pytz = "^2023.3"
 aiohttp = "^3.8.6"
-requests = "2.31.0"
 
 [build-system]
 requires = ["poetry-core"]

@@ -1,10 +1,11 @@
 """
     Service to deal with auth system
 """
+
 from fastapi import Request
 from starlette.exceptions import HTTPException
 
-from app.plugins import CustomAuthPlugin
+from app.plugins.custom_auth import CustomAuthPlugin
 from app.settings import Settings
 
 

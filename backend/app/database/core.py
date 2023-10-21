@@ -9,12 +9,12 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.pool import QueuePool
 
-from app.settings import Settings
+from app.settings import DatabaseSettings
 
 T = TypeVar("T")
 
 engine = create_engine(
-    url=Settings().database_url,
+    url=DatabaseSettings().url,
     max_overflow=0,
     pool_pre_ping=True,
     pool_recycle=3600,

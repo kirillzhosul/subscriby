@@ -9,8 +9,8 @@ from fastapi import APIRouter, Depends
 
 from app.database.core import get_repository
 from app.database.repositories.subscription import SubscriptionRepository
-from app.plugins import CustomKPIPlugin
-from app.services import AuthDependency
+from app.plugins.custom_kpi import CustomKPIPlugin
+from app.services.auth import AuthDependency
 from app.settings import Settings
 
 router = APIRouter(prefix="/analytics")
