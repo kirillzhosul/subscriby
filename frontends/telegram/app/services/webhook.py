@@ -7,25 +7,22 @@ from app.texts import T
 
 async def webhook_handler(request: Request, bot: Bot):
     json = await request.json()
-    event_name = json["event_name"]
+    event = json["event"]
+    name = event["name"]
+    payload = event["payload"]
 
     message = None
-    match event_name:
+    match name:
         case "subscription.publish":
-            subscription = json["event_payload"]["subscription"]
+            p = payload["subscription"]
             message = T["subscription_created"].format(
-                subscription["secret_key"],
-                subscription["expires_date"],
-                subscription["payload"],
+                p["secret_key"], p["expires_date"], p["payload"]
             )
         case "subscription.revoke":
-            subscription = json["event_payload"]["subscription"]
-            message = T["subscription_revoked"].format(
-                subscription["secret_key"],
-                subscription["payload"],
-            )
-        case _:
-            return
+            p = payload["subscription"]
+            message = T["subscription_revoked"].format(p["secret_key"], p["payload"])
 
+    if not message:
+        return
     for user_id in TelegramSettings().admin_ids:
         await bot.send_message(user_id, message)
