@@ -68,7 +68,7 @@ async def publish_subscription_days(message: Message, state: FSMContext) -> None
 async def finish_publish_subscription(message: Message, state: FSMContext) -> None:
     await state.update_data(price=message.text)
     data = await state.get_data()
-    days = await data.get("days")
+    days = int(data.get("days"))
     try:
         price = int(data.get("price"))
         if price < 0:
