@@ -49,11 +49,10 @@ def get_kpi_for_period(
     Returns KPI analytics for period in days
     """
 
-    if days <= 1:
+    if days < 1:
         raise HTTPException(status_code=400)
     plugin = CustomKPIPlugin()
-    counters = repo.get_period_kpi_counters(days - 1)
-    # -1 due to database includes current date
+    counters = repo.get_period_kpi_counters(days)
 
     periods = {
         k: (
