@@ -33,10 +33,10 @@ async def subscriby_webhook_handler(request: web.Request):
     await webhook_handler(request, _bot)
 
 
-async def on_startup(bot: Bot) -> None:
+async def on_startup(*args, **kwargs) -> None:
     settings = TelegramSettings()
     print("hook set to", f"{settings.web_host}{settings.hook_path}")
-    await bot.set_webhook(f"{settings.web_host}{settings.hook_path}")
+    await _bot.set_webhook(f"{settings.web_host}{settings.hook_path}")
 
 
 def start_http() -> None:
