@@ -13,6 +13,10 @@ Easy deployable system (API) for creating subscription based applications
 - Query your subscription key from user inside your application (fetch API call)
 - Create and manage new subscription for users (by hand, implementing own management tool, or use premade inside `frontends` directory)
 
+# Notice
+
+Project does provide support for storing / analysing (KPI) of prices/revenue, but not the purchasing via any payment provider or etc, you can write own frontend for that or publishing subscriptions by own
+
 # Authorization
 
 `SUBSCRIBY_AUTH_METHOD` Auth methods to use

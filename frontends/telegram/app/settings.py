@@ -35,3 +35,4 @@ class TelegramSettings(BaseSettings):
     hook_path: str
     http_internal_port: int
     http_internal_host: str
+    expect_webhook_command_result: bool = True

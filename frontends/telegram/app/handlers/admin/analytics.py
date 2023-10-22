@@ -29,7 +29,7 @@ def _format_kpi_chunk(e: dict) -> str:
 
 @router.message(F.text == main_kb.BUTTON_KPI_ANALYTICS)
 async def start_kpi_analytics(message: Message, state: FSMContext) -> None:
-    await message.answer(T["enter_days_for_kpi"])
+    await message.answer(T["enter_days_for_kpi"], reply_markup=main_kb.get())
     await state.set_state(KPIAnalytics.days)
 
 
@@ -42,14 +42,14 @@ async def finish_kpi_analytics(message: Message, state: FSMContext) -> None:
         if days <= 1:
             raise ValueError
     except ValueError:
-        await message.answer(T["invalid_number"])
+        await message.answer(T["invalid_number"], reply_markup=main_kb.get())
         return
     total_kpi = await api_call("analytics/kpi/total", {})
     if total_kpi is None:
-        return await message.answer(T["api_error"])
+        return await message.answer(T["api_error"], reply_markup=main_kb.get())
     period_kpi = await api_call("analytics/kpi/period", {"days": days})
     if period_kpi is None:
-        return await message.answer(T["api_error"])
+        return await message.answer(T["api_error"], reply_markup=main_kb.get())
 
     periods = dict(period_kpi["kpi"]["periods"])
     period_chunks = "\n".join(
@@ -77,6 +77,7 @@ async def finish_kpi_analytics(message: Message, state: FSMContext) -> None:
             period_kpi["period_days"],
             period_chunks,
             period_kpi["kpi"]["percents"]["published_average"],
-        )
+        ),
+        reply_markup=main_kb.get(),
     )
     await state.clear()

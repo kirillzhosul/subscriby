@@ -16,7 +16,9 @@ LANGUAGES: dict[str, dict[str, str]] = {
         "btn_create": "🛒 Выдать ключ",
         "btn_revoke": "🔸 Отозвать ключ",
         "btn_kpi": "📈 KPI аналитика",
+        "unknown_command": "Не известное действие/команда (Напишите /start)",
         "enter_key_to_revoke": "Введите ключ который хотите отозвать",
+        "enter_price_for_publish": "Введите цену покупки (если куплен, иначе 0)",
         "kpi_base": """
 📈 <b><u>KPI аналитика</u></b>:\n
 <b>Статистика:</b>\n
@@ -58,6 +60,8 @@ LANGUAGES: dict[str, dict[str, str]] = {
         "btn_revoke": "🔸 Revoke old",
         "btn_kpi": "📈 KPI analytics",
         "enter_key_to_revoke": "Enter key which you wish to revoke",
+        "unknown_command": "Unknown action/command (Send /start)",
+        "enter_price_for_publish": "Enter price for key (if purchased, else 0)",
         "kpi_base": """
 📈 <b><u>KPI analytics</u></b>:\n
 <b>Statistics:</b>\n

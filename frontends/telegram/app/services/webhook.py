@@ -25,4 +25,7 @@ async def webhook_handler(request: Request, bot: Bot):
     if not message:
         return
     for user_id in TelegramSettings().admin_ids:
-        await bot.send_message(user_id, message)
+        try:
+            await bot.send_message(user_id, message)
+        except Exception:
+            continue
