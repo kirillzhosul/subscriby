@@ -18,7 +18,7 @@ router.callback_query.filter(RoleFilter(UserRole.ADMIN))
 
 def _format_kpi_chunk(e: dict) -> str:
     return T["kpi_chunk"].format(
-        f"{e['revenue']}{TelegramSettings().revenue_currency}",
+        f"{e['revenue'] or 0} {TelegramSettings().revenue_currency}",
         e["all"],
         e["valid"],
         e["active"],
