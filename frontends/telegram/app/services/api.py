@@ -1,26 +1,28 @@
-import requests
+from aiohttp import ClientSession
 
-from app.settings import Settings
+from app.settings import SubscribySettings
 
 
-def api_call(method: str, params: dict) -> dict | None:
+async def api_call(method: str, params: dict) -> dict | None:
     """
     Calls API and returns JSON response or None if error.
     """
-    method_url = f"{Settings().subscriby_api_url}/{method}"
-    print(f"Calling {method_url}!")
+    settings = SubscribySettings()
+    if settings.auth_method == "secret":
+        params |= {"secret": settings.auth_secret}
     try:
-        request = requests.get(url=method_url, params=params)
-    except requests.exceptions.RequestException as e:
-        return print(f"[ERROR]: Unable to send API request due to {e}!")
-    try:
-        json = request.json()
+        async with ClientSession() as session:
+            async with session.get(
+                f"{SubscribySettings().api_host}/{method}",
+                params=params,
+            ) as response:
+                if response.status != 200:
+                    return print(
+                        f"[ERROR]: API respond with status: {response.status}!"
+                    )
+                json = await response.json()
+                if "error" in json:
+                    return print(f"[ERROR]: API respond with error: {json['error']}!")
+                return json
     except Exception as e:
-        return print(
-            f"[ERROR]: Unable to parse API JSON due to {e}, response: {request.text}!"
-        )
-
-    if "error" in json:
-        return print(f"[ERROR]: API respond with error: {json['error']}!")
-
-    return json
+        return print(f"[ERROR]: Unable to send API request due to {e}!")

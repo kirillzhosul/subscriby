@@ -1,4 +1,8 @@
-from app.settings import Settings
+"""
+    Translation system
+"""
+
+from app.settings import TelegramSettings
 
 LANGUAGES: dict[str, dict[str, str]] = {
     "RU": {
@@ -25,11 +29,12 @@ LANGUAGES: dict[str, dict[str, str]] = {
 <b>За период в {4}:</b>\n
 {5}
 """,
-        "kpi_chunk": """\tВсего: {0}
-\tВалидно: {1}
-\tАктивно: {2}
-\tИстекли: {3}
-\tОтозваны: {4}
+        "kpi_chunk": """\tВыручка: {0}
+\tВсего: {1}
+\tВалидно: {2}
+\tАктивно: {3}
+\tИстекли: {4}
+\tОтозваны: {5}
 """,
         "subscription_created": """
 ✅ Ключ <code>{0}</code> выдан!
@@ -65,11 +70,12 @@ Mean for period: {6}\n
 <b>For {4} days:</b>\n
 {5}
 """,
-        "kpi_chunk": """\tAll: {0}
-\tValid: {1}
-\tActive: {2}
-\tExpired: {3}
-\tRevoked: {4}
+        "kpi_chunk": """\tRevenue: {0}
+\tAll: {1}
+\tValid: {2}
+\tActive: {3}
+\tExpired: {4}
+\tRevoked: {5}
 """,
         "subscription_created": """
 ✅ Key <code>{0}</code> created!
@@ -83,4 +89,4 @@ Mean for period: {6}\n
     },
 }
 
-T = LANGUAGES[Settings().subscriby_telegram_language]
+T = LANGUAGES[TelegramSettings().language]

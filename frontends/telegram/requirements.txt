@@ -1,9 +1,0 @@
-# Framework
-aiogram==3.1.1
-aiohttp==3.8.6
-
-# Stuff
-requests==2.31.0
-
-# Environment settings management
-pydantic_settings==2.0.3

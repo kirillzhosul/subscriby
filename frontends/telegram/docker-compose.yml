@@ -3,9 +3,10 @@ version: "3"
 services:
   telegram:
     hostname: subscriby
+    container_name: subscriby_frontend_telegram
     restart: unless-stopped
     build: .
     ports:
-      - 3000:3000
-    env_file: ".env"
-    command: "python run.py"
+      - "${COMPOSE_EXPOSED_PORT}:${TELEGRAM_HTTP_INTERNAL_PORT}"
+    env_file: .env
+    command: "poetry run python __main__.py"

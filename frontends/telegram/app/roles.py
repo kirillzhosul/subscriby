@@ -1,9 +1,31 @@
-from typing import Any, Awaitable, Callable, Dict, List
+"""
+    Role system of the bot
+"""
+from enum import Enum
+from typing import Any, Awaitable, Callable, Collection, Dict, List, Union
 
 from aiogram import BaseMiddleware
-from aiogram.types import TelegramObject
+from aiogram.filters import Filter
+from aiogram.types import TelegramObject, User
 
-from app.models.role import UserRole
+
+class UserRole(Enum):
+    ADMIN = "admin"
+    USER = "user"
+
+
+class RoleFilter(Filter):
+    def __init__(self, role: Union[UserRole, Collection[UserRole]]) -> None:
+        self.roles = {role} if isinstance(role, UserRole) else set(role)
+
+    async def __call__(
+        self,
+        *args,
+        event_from_user: User,
+        role: Union[None, UserRole, Collection[UserRole]] = None,
+        **kwargs
+    ) -> bool:
+        return role in self.roles
 
 
 class RoleMiddleware(BaseMiddleware):

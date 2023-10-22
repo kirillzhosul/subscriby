@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "subscriby-frontend-telegram"
+version = "0.1.0"
+description = "Frontend with Telegram bot for `Subscriby`"
+authors = ["Kirill Zhosul <kirillzhosul@florgon.com>"]
+maintainers = ["Kirill Zhosul <kirillzhosul@florgon.com>"]
+homepage = "https://github.com/kirillzhosul/subscriby"
+repository = "https://github.com/kirillzhosul/subscriby"
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+aiogram = "3.1.1"
+aiohttp = "^3.8.6"
+pydantic_settings = "^2.0.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

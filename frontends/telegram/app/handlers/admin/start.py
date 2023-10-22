@@ -2,9 +2,8 @@ from aiogram import Router
 from aiogram.filters import CommandStart
 from aiogram.types import Message
 
-from app.filters.role import RoleFilter
 from app.keyboards.reply.admin import main_kb
-from app.models.role import UserRole
+from app.roles import RoleFilter, UserRole
 from app.texts import T
 
 router = Router(name=__name__)
