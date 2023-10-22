@@ -46,5 +46,6 @@ def start_http() -> None:
     webhook_requests_handler = SimpleRequestHandler(dispatcher=_dp, bot=_bot)
     webhook_requests_handler.register(app, path=settings.hook_path)
     app.router.add_post(SubscribySettings().hook_path, subscriby_webhook_handler)
+    app.on_startup.append(on_startup)
     setup_application(app, _dp, bot=_bot)
     web.run_app(app, host=settings.http_internal_host, port=settings.http_internal_port)
