@@ -18,8 +18,3 @@ async def start_command(message: Message) -> None:
     await message.answer(
         T["welcome"].format(message.from_user.full_name), reply_markup=main_kb.get()
     )
-
-
-@router.message(RoleFilter(UserRole.ADMIN))
-async def default_handler(message: Message) -> None:
-    await message.answer(T["unknown_command"], reply_markup=main_kb.get())
