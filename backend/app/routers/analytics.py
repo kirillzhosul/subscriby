@@ -54,7 +54,7 @@ def get_kpi_for_period(
 
     periods = {
         k: (
-            {v: counters[v][k] for v in counters.keys()}
+            {v: dict(counters[v]).get(k, 0) for v in counters.keys()}
             | {
                 "date": (datetime.now() - timedelta(days=abs(k))).strftime(
                     Settings().date_format
