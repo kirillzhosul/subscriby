@@ -6,16 +6,16 @@ from json import loads
 from app.plugins.custom_payload import CustomPayloadPlugin
 
 
-def preprocess_payload(payload: str) -> str:
+def preprocess_payload(payload: str) -> dict:
     """
-    Preprocesses payload via parsing and formatting back or raises error
+    Preprocesses payload via parsing or returns default
     """
     plugin = CustomPayloadPlugin()
-    return str(plugin(payload=payload))
+    return parse_payload(plugin(payload=payload))
 
 
-def parse_payload(payload: str) -> dict:
+def parse_payload(payload: str | dict) -> dict:
     """
     Parses payload and returns dict out of that
     """
-    return loads(payload)
+    return payload if isinstance(payload, dict) else loads(payload)

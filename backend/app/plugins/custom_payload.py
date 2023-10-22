@@ -4,17 +4,13 @@ Custom plugin for payload validation / parsing
 
 from pydantic import BaseModel, ValidationError
 
-from .bases import BasePayloadPlugin
+from .bases import BaseModelPayload, BasePayloadPlugin
 
 
-class CustomPayloadModel(BaseModel):
+class CustomPayloadModel(BaseModelPayload):
     """
     Model that represents custom payload filter
     """
-
-    version: int = 1
-    source: str | None = None
-    price: int | None = None
 
 
 class CustomPayloadPlugin(BasePayloadPlugin):
@@ -22,10 +18,16 @@ class CustomPayloadPlugin(BasePayloadPlugin):
     Custom plugin for payload validation / parsing
     """
 
+    T: type[BaseModel] = CustomPayloadModel
+
     def __call__(self, payload: str) -> str:
         try:
-            return CustomPayloadModel.model_validate_json(
-                json_data=payload
-            ).model_dump_json()
+            p = self.T.model_validate_json(json_data=payload)
         except ValidationError:
-            return CustomPayloadModel().model_dump_json()
+            p = self.T()
+
+        return p.model_dump_json(
+            exclude_none=False,
+            exclude_unset=False,
+            exclude_defaults=False,
+        )

@@ -51,6 +51,7 @@ def get_kpi_for_period(
 
     plugin = CustomKPIPlugin()
     counters = repo.get_period_kpi_counters(days)
+
     periods = {
         k: (
             {v: counters[v][k] for v in counters.keys()}
