@@ -116,7 +116,7 @@ class SubscriptionRepository(SQLRepository):
         """
         return self.get_count_for_period(
             days=days,
-            _ext_filter=lambda query: query.filter(not Subscription.is_active),
+            _ext_filter=lambda query: query.filter(Subscription.is_active == False),
         )
 
     def get_active_for_period(self, days: int) -> dict[int, int]:
@@ -157,7 +157,9 @@ class SubscriptionRepository(SQLRepository):
         """
         Get count for all revoked subscriptions
         """
-        return self.db.query(Subscription).filter(not Subscription.is_active).count()
+        return (
+            self.db.query(Subscription).filter(Subscription.is_active == False).count()
+        )
 
     def get_expired_count(self) -> int:
         """

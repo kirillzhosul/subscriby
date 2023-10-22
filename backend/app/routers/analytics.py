@@ -5,7 +5,7 @@
 from datetime import datetime, timedelta
 from statistics import mean
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 
 from app.database.core import get_repository
 from app.database.repositories.subscription import SubscriptionRepository
@@ -49,8 +49,11 @@ def get_kpi_for_period(
     Returns KPI analytics for period in days
     """
 
+    if days <= 1:
+        raise HTTPException(status_code=400)
     plugin = CustomKPIPlugin()
-    counters = repo.get_period_kpi_counters(days)
+    counters = repo.get_period_kpi_counters(days - 1)
+    # -1 due to database includes current date
 
     periods = {
         k: (
