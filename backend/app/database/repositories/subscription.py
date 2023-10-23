@@ -1,12 +1,13 @@
 """
     Repository to deal with subscriptions
 """
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
+from functools import partial
 from secrets import token_urlsafe
-from typing import Callable
+from typing import Any
 
 from sqlalchemy import Integer, func, or_
-from sqlalchemy.orm import Query, Session
+from sqlalchemy.orm import Session
 
 from .base import SQLRepository
 from app.database.models.subscription import Subscription
@@ -55,172 +56,107 @@ class SubscriptionRepository(SQLRepository):
             self.add_and_commit(model)
             return model
 
-    def get_count_for_period(
-        self, days: int, *, _ext_filter: Callable[[Query], Query] | None = None
-    ) -> dict[int, int]:
+
+class SubscriptionKPIRepository(SubscriptionRepository):
+    """
+    Subscription repository with KPI/analytics methods
+    """
+
+    def _calculate_kpi_query_periodic(
+        self,
+        days: int,
+        only_with_price: bool,
+        query_row: Any,
+        query_filters: list[Any] | None,
+    ) -> dict[date, Any]:
+        """
+        Returns KPI query result for period as dict from period (-i) to result
+        """
+        # Current date for comparing under current date
+        now = datetime.now()
+        today = datetime(year=now.year, month=now.month, day=now.day)
+
+        # Custom query
+        query = (
+            self.db.query(func.date(Subscription.created_at), query_row)
+            .group_by(func.date(Subscription.created_at))
+            .filter(Subscription.created_at >= today - timedelta(days=days))
+            .filter(Subscription.created_at <= today + timedelta(days=1))
+        )
+
+        if only_with_price:
+            query = query.filter(func.cast(Subscription.payload["price"], Integer) != 0)
+
+        # Map custom filters
+        if query_filters:
+            query = query.filter(*query_filters)
+
+        # Map query result
+        return {row[0]: row[1] for row in query.all()}
+
+    def get_count(
+        self,
+        days: int | None = None,
+        only_with_price: bool = False,
+        query_filters: list[Any] | None = None,
+    ) -> dict[date, int] | int:
         """
         Returns count of subscriptions created within each day within period in days
+        or total if days is not specified
         """
-        if not _ext_filter:
-            _ext_filter = lambda query: query
-
-        today = datetime(datetime.now().year, datetime.now().month, datetime.now().day)
-        delta = timedelta(days=days)
-        items = {-i: 0 for i in range(days)}
-        for i, v in enumerate(
-            _ext_filter(
-                self.db.query(
-                    func.date(Subscription.created_at),
-                    func.count(Subscription.id),
+        if days is None:
+            query = self.db.query(Subscription)
+            if query_filters:
+                query = query.filter(*query_filters)
+            if only_with_price:
+                query = query.filter(
+                    func.cast(Subscription.payload["price"], Integer) != 0
                 )
-                .group_by(func.date(Subscription.created_at))
-                .filter(Subscription.created_at >= today - delta)
-                .filter(Subscription.created_at <= today + timedelta(days=1))
-            ).all()
-        ):
-            items[-i] = v[1]
-        return items
-
-    def get_revenue_for_period(self, days: int) -> dict[int, int]:
-        """
-        Returns revenue within each day for period in days
-        """
-
-        today = datetime(datetime.now().year, datetime.now().month, datetime.now().day)
-        delta = timedelta(days=days)
-        items = {-i: 0 for i in range(days)}
-        for i, v in enumerate(
-            self.db.query(
-                func.date(Subscription.created_at),
-                func.sum(func.cast(Subscription.payload["price"], Integer)),
-            )
-            .group_by(func.date(Subscription.created_at))
-            .filter(Subscription.created_at >= today - delta)
-            .filter(Subscription.created_at <= today + timedelta(days=1))
-            .all()
-        ):
-            items[-i] = v[1] or 0
-        return items
-
-    def get_total_revenue(self) -> int:
-        """
-        Returns total revenue by calculating price
-        """
-        return self.db.query(
-            func.sum(func.cast(Subscription.payload["price"], Integer))
-        ).first()[0]
-
-    def get_revoked_for_period(self, days: int) -> dict[int, int]:
-        """
-        Returns revoked count of subscriptions created within each day within period in days
-        """
-        return self.get_count_for_period(
+            return query.count()
+        return self._calculate_kpi_query_periodic(
             days=days,
-            _ext_filter=lambda query: query.filter(Subscription.is_active == False),
+            only_with_price=only_with_price,
+            query_row=func.count(Subscription.id),
+            query_filters=query_filters,
         )
 
-    def get_active_for_period(self, days: int) -> dict[int, int]:
+    def get_revenue(self, days: int | None = None) -> dict[date, int] | int:
         """
-        Returns active count of subscriptions created within each day within period in days
+        Returns revenue within each day for period in days or for total
+        if days is not specified
         """
-        return self.get_count_for_period(
-            days=days, _ext_filter=lambda query: query.filter(Subscription.is_active)
+
+        row = func.sum(func.cast(Subscription.payload["price"], Integer))
+        if days is None:
+            return self.db.query(row).first()[0]
+        return self._calculate_kpi_query_periodic(
+            days=days,
+            only_with_price=False,  # Due to SUM already does not sums non-priced
+            query_row=row,
+            query_filters=[],
         )
 
-    def get_valid_for_period(self, days: int) -> dict[int, int]:
+    def get_counters(
+        self, days: int | None, only_with_price: bool
+    ) -> dict[str, dict[date, Any]]:
         # sourcery skip: none-compare
         """
-        Returns valid count of subscriptions created within each day within period in days
+        Returns dict for KPI counters for whole time or periodic if days is specified
         """
-        return self.get_count_for_period(
-            days=days,
-            _ext_filter=lambda query: query.filter(Subscription.is_active).filter(
-                or_(
-                    Subscription.expires_at > datetime.now(),
-                    Subscription.expires_at == None,
-                )
-            ),
-        )
-
-    def get_expired_for_period(self, days: int) -> dict[int, int]:
-        """
-        Returns expired count of subscriptions created within each day within period in days
-        """
-        return self.get_count_for_period(
-            days=days,
-            _ext_filter=lambda query: query.filter(
-                Subscription.expires_at <= datetime.now()
-            ),
-        )
-
-    def get_revoked_count(self) -> int:
-        """
-        Get count for all revoked subscriptions
-        """
-        return (
-            self.db.query(Subscription).filter(Subscription.is_active == False).count()
-        )
-
-    def get_expired_count(self) -> int:
-        """
-        Get count for all expired subscriptions
-        """
-        return (
-            self.db.query(Subscription)
-            .filter(Subscription.expires_at <= datetime.now())
-            .count()
-        )
-
-    def get_active_count(self) -> int:
-        """
-        Get count for all active subscriptions
-        """
-        return self.db.query(Subscription).filter(Subscription.is_active).count()
-
-    def get_valid_count(self) -> int:
-        """
-        Get count for all valid subscriptions
-        """
-        return (
-            self.db.query(Subscription)
-            .filter(Subscription.is_active)
-            .filter(
-                or_(
-                    Subscription.expires_at > datetime.now(),
-                    Subscription.expires_at == None,
-                )
-            )
-            .count()
-        )
-
-    def get_total_kpi_counters(self) -> dict:
-        """
-        Returns dict for KPI counters for whole time
-        """
+        get = partial(self.get_count, days, only_with_price)
         return {
-            "all": self.get_count(),
-            "valid": self.get_valid_count(),
-            "revoked": self.get_revoked_count(),
-            "expired": self.get_expired_count(),
-            "active": self.get_active_count(),
-            "revenue": self.get_total_revenue(),
+            "all": get(),
+            "revenue": self.get_revenue(days=days),
+            "expired": get([Subscription.expires_at <= datetime.now()]),
+            "revoked": get([Subscription.is_active == False]),
+            "active": get([Subscription.is_active == True]),
+            "valid": get(
+                [
+                    Subscription.is_active,
+                    or_(
+                        Subscription.expires_at > datetime.now(),
+                        Subscription.expires_at == None,
+                    ),
+                ]
+            ),
         }
-
-    def get_period_kpi_counters(self, days: int) -> dict:
-        """
-        Returns dict for KPI counters for period in days
-        """
-        return {
-            "all": self.get_count_for_period(days),
-            "valid": self.get_valid_for_period(days),
-            "revoked": self.get_revoked_for_period(days),
-            "expired": self.get_expired_for_period(days),
-            "active": self.get_active_for_period(days),
-            "revenue": self.get_revenue_for_period(days),
-        }
-
-    def get_count(self) -> int:
-        """
-        Get count for all subscriptions
-        """
-        return self.db.query(Subscription).count()

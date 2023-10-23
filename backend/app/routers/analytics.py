@@ -8,7 +8,7 @@ from statistics import mean
 from fastapi import APIRouter, Depends, HTTPException
 
 from app.database.core import get_repository
-from app.database.repositories.subscription import SubscriptionRepository
+from app.database.repositories.subscription import SubscriptionKPIRepository
 from app.plugins.custom_kpi import CustomKPIPlugin
 from app.services.auth import AuthDependency
 from app.settings import Settings
@@ -18,56 +18,64 @@ router = APIRouter(prefix="/analytics")
 
 @router.get("/kpi/total", dependencies=[Depends(AuthDependency())])
 def get_kpi_for_total(
-    repo: SubscriptionRepository = Depends(get_repository(SubscriptionRepository)),
+    repo: SubscriptionKPIRepository = Depends(
+        get_repository(SubscriptionKPIRepository)
+    ),
+    only_with_price: bool = False,
 ):
     """
     Returns KPI analytics for whole time
     """
 
     plugin = CustomKPIPlugin()
-    counters = repo.get_total_kpi_counters()
+    counters = repo.get_counters(days=None, only_with_price=only_with_price)
     percents = {
         "revoked": round(counters["revoked"] / counters["all"] * 100, 2),
         "expired": round(counters["expired"] / counters["all"] * 100, 2),
         "valid": round(counters["valid"] / counters["all"] * 100, 2),
     }
     return {
+        "only_with_price": only_with_price,
         "kpi": {
             "counters": counters,
             "percents": percents,
         }
-        | plugin.extend_kpi(repo),
+        | plugin.extend_kpi(only_with_price, repo),
     }
 
 
 @router.get("/kpi/period", dependencies=[Depends(AuthDependency())])
 def get_kpi_for_period(
-    repo: SubscriptionRepository = Depends(get_repository(SubscriptionRepository)),
+    repo: SubscriptionKPIRepository = Depends(
+        get_repository(SubscriptionKPIRepository)
+    ),
+    only_with_price: bool = False,
     days: int = 7,
+    periods_as_list: bool = False,
 ):
     """
     Returns KPI analytics for period in days
     """
-
     if days < 1:
         raise HTTPException(status_code=400)
     plugin = CustomKPIPlugin()
-    counters = repo.get_period_kpi_counters(days)
+    counters = repo.get_counters(days=days, only_with_price=only_with_price)
 
     periods = {
-        k: (
-            {v: dict(counters[v]).get(k, 0) for v in counters.keys()}
-            | {
-                "date": (datetime.now() - timedelta(days=abs(k))).strftime(
-                    Settings().date_format
-                )
-            }
+        date: (
+            {key: (counters[key].get(date, 0) or 0) for key in counters.keys()}
+            | {"date": date.strftime(Settings().date_format)}
         )
-        for k in counters["all"].keys()
+        for date in counters["all"].keys()
     }
+    if periods_as_list:
+        periods = list(periods.values())
+
     percents = {"published_average": round(mean(counters["all"].values()), 2)}
     return {
         "period_days": days,
+        "periods_as_list": periods_as_list,
+        "only_with_price": only_with_price,
         "kpi": {"periods": periods, "percents": percents}
-        | plugin.extend_kpi_for_period(days, repo),
+        | plugin.extend_kpi_for_period(days, only_with_price, repo),
     }

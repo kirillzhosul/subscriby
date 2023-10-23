@@ -54,9 +54,11 @@ class BaseKPIPlugin(ABC):
     """
 
     @abstractmethod
-    def extend_kpi_for_period(self, days: int, repo: SubscriptionRepository) -> dict:
+    def extend_kpi_for_period(
+        self, only_with_price: bool, days: int, repo: SubscriptionRepository
+    ) -> dict:
         ...
 
     @abstractmethod
-    def extend_kpi(self, repo: SubscriptionRepository) -> dict:
+    def extend_kpi(self, only_with_price: bool, repo: SubscriptionRepository) -> dict:
         ...

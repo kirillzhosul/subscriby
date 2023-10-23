@@ -11,8 +11,10 @@ class CustomKPIPlugin(BaseKPIPlugin):
     Custom plugin for KPI analytics
     """
 
-    def extend_kpi_for_period(self, days: int, repo: SubscriptionRepository) -> dict:
+    def extend_kpi_for_period(
+        self, days: int, only_with_price: bool, repo: SubscriptionRepository
+    ) -> dict:
         return {}
 
-    def extend_kpi(self, repo: SubscriptionRepository) -> dict:
+    def extend_kpi(self, only_with_price: bool, repo: SubscriptionRepository) -> dict:
         return {}
