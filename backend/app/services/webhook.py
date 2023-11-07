@@ -31,7 +31,9 @@ async def notify_startup_with_webhook() -> None:
     """
     Notifies webhook listeners for backend restarted / went online
     """
-    BackgroundTasks().add_task(broadcast_webhook_event, "api.startup", {})
+    background_tasks = BackgroundTasks()
+    background_tasks.add_task(broadcast_webhook_event, "api.startup", {})
+    await background_tasks()
 
 
 async def broadcast_webhook_event(name: str, payload: dict) -> None:
