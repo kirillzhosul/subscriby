@@ -56,6 +56,21 @@ class SubscriptionRepository(SQLRepository):
             self.add_and_commit(model)
             return model
 
+    def renew(
+        self, secret_key: str, days: int, renew_type: str = "replace"
+    ) -> Subscription | None:
+        """
+        Revokes subscription by it secret key and returns None (if not found) or subscription.
+        """
+        delta = timedelta(days=days)
+        if model := self.get(secret_key=secret_key):
+            if renew_type == "replace":
+                model.expires_at = (datetime.now() + delta) if days != 0 else None
+            elif renew_type == "add":
+                model.expires_at += delta
+            self.add_and_commit(model)
+            return model
+
 
 class SubscriptionKPIRepository(SubscriptionRepository):
     """

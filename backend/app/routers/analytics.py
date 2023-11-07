@@ -2,7 +2,6 @@
     Router for KPI (analytics, statistics) methods
 """
 
-from datetime import datetime, timedelta
 from statistics import mean
 
 from fastapi import APIRouter, Depends, HTTPException

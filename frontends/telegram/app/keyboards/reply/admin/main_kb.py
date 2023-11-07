@@ -9,6 +9,7 @@ from app.texts import T
 BUTTON_CREATE_NEW = T["btn_create"]
 BUTTON_REVOKE_OLD = T["btn_revoke"]
 BUTTON_KPI_ANALYTICS = T["btn_kpi"]
+BUTTON_RENEW_OLD = T["btn_renew"]
 
 
 def get():
@@ -19,6 +20,7 @@ def get():
         keyboard=[
             [KeyboardButton(text=BUTTON_CREATE_NEW)],
             [KeyboardButton(text=BUTTON_REVOKE_OLD)],
+            [KeyboardButton(text=BUTTON_RENEW_OLD)],
             [KeyboardButton(text=BUTTON_KPI_ANALYTICS)],
         ],
         resize_keyboard=True,

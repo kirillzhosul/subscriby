@@ -4,7 +4,7 @@
 """
 import time
 
-from aiohttp import ClientSession, request
+from aiohttp import ClientSession
 from aiohttp.client_exceptions import ClientError
 
 from app.logger import logger

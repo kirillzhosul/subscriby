@@ -15,9 +15,11 @@ LANGUAGES: dict[str, dict[str, str]] = {
         "kpi_period_header": "<b><i>[{0}]: </i></b>\n",
         "btn_create": "🛒 Выдать ключ",
         "btn_revoke": "🔸 Отозвать ключ",
+        "btn_renew": "Обновить ключ",
         "btn_kpi": "📈 KPI аналитика",
         "unknown_command": "Не известное действие/команда (Напишите /start)",
         "enter_key_to_revoke": "Введите ключ который хотите отозвать",
+        "enter_key_to_renew": "Введите ключ который хотите обновить",
         "enter_price_for_publish": "Введите цену покупки (если куплен, иначе 0)",
         "kpi_base": """
 📈 <b><u>KPI аналитика</u></b>:\n
@@ -59,7 +61,9 @@ LANGUAGES: dict[str, dict[str, str]] = {
         "btn_create": "🛒 Create new",
         "btn_revoke": "🔸 Revoke old",
         "btn_kpi": "📈 KPI analytics",
+        "btn_renew": "Renew key",
         "enter_key_to_revoke": "Enter key which you wish to revoke",
+        "enter_key_to_renew": "Enter key which you wish to renew",
         "unknown_command": "Unknown action/command (Send /start)",
         "enter_price_for_publish": "Enter price for key (if purchased, else 0)",
         "kpi_base": """
@@ -82,12 +86,16 @@ Mean for period: {6}\n
 \tRevoked: {5}
 """,
         "subscription_created": """
-✅ Key <code>{0}</code> created!
+✅ Key <code>{0}</code> created for {3} days!
 🗓 Valid until: {1}
 💉 Injected payload: {2}
 """,
         "subscription_revoked": """
 ⏸ Key <code>{0}</code> revoked!
+💉 Injected payload: {1}
+""",
+        "subscription_renewed": """
+⏸ Key <code>{0}</code> renewed for {2} days with type `{3}`!
 💉 Injected payload: {1}
 """,
     },

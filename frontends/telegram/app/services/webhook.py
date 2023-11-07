@@ -16,11 +16,16 @@ async def webhook_handler(request: Request, bot: Bot):
         case "subscription.publish":
             p = payload["subscription"]
             message = T["subscription_created"].format(
-                p["secret_key"], p["expires_date"], p["payload"]
+                p["secret_key"], p["expires_date"], p["payload"], payload["days"]
             )
         case "subscription.revoke":
             p = payload["subscription"]
             message = T["subscription_revoked"].format(p["secret_key"], p["payload"])
+        case "subscription.renew":
+            p = payload["subscription"]
+            message = T["subscription_renewed"].format(
+                p["secret_key"], p["payload"], payload["days"], payload["renew_type"]
+            )
 
     if not message:
         return

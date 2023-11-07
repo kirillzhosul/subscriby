@@ -9,13 +9,59 @@ from app.keyboards.reply.admin import main_kb
 from app.roles import RoleFilter, UserRole
 from app.services.api import api_call
 from app.settings import TelegramSettings
-from app.states import PublishSubscription, RevokeSubscription
+from app.states import PublishSubscription, RenewSubscription, RevokeSubscription
 from app.texts import T
 
 router = Router(name=__name__)
 # Apply RoleFilter to all router's handlers
 router.message.filter(RoleFilter(UserRole.ADMIN))
 router.callback_query.filter(RoleFilter(UserRole.ADMIN))
+
+
+@router.message(F.text == main_kb.BUTTON_RENEW_OLD)
+async def start_renew_subscription(message: Message, state: FSMContext) -> None:
+    await message.answer(T["enter_days_for_publish"], reply_markup=main_kb.get())
+    await state.set_state(RenewSubscription.days)
+
+
+@router.message(StateFilter(PublishSubscription.days))
+async def renew_subscription_days(message: Message, state: FSMContext) -> None:
+    await state.update_data(days=message.text)
+    data = await state.get_data()
+    try:
+        days = int(data.get("days"))
+        if days <= 0:
+            raise ValueError
+    except ValueError:
+        await message.answer(T["invalid_number"], reply_markup=main_kb.get())
+        await state.clear()
+        return
+    await message.answer(T["enter_key_to_renew"], reply_markup=main_kb.get())
+    await state.set_state(RenewSubscription.key)
+
+
+@router.message(StateFilter(RevokeSubscription.key))
+async def finish_renew_subscription(message: Message, state: FSMContext) -> None:
+    await state.update_data(key=message.text)
+    data = await state.get_data()
+    key = str(data.get("key"))
+    renew_type = "replace"
+    request = await api_call(
+        "subscription/renew",
+        {"secret_key": key, "days": int(data.get("days")), "renew_type": renew_type},
+    )
+    if request is None:
+        await message.answer(T["api_error"], reply_markup=main_kb.get())
+        return
+    if not TelegramSettings().expect_webhook_command_result:
+        p = request["subscription"]
+        await message.answer(
+            T["subscription_renewed"].format(
+                p["secret_key"], p["payload"], int(data.get("days")), renew_type
+            ),
+            reply_markup=main_kb.get(),
+        )
+    await state.clear()
 
 
 @router.message(F.text == main_kb.BUTTON_REVOKE_OLD)

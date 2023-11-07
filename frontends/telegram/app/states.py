@@ -14,5 +14,10 @@ class RevokeSubscription(StatesGroup):
     key = State()
 
 
+class RenewSubscription(StatesGroup):
+    key = State()
+    days = State()
+
+
 class KPIAnalytics(StatesGroup):
     days = State()
