@@ -26,6 +26,8 @@ async def webhook_handler(request: Request, bot: Bot):
             message = T["subscription_renewed"].format(
                 p["secret_key"], p["payload"], payload["days"], payload["renew_type"]
             )
+        case "api.startup":
+            message = "[webhook.api.startup]!"
 
     if not message:
         return

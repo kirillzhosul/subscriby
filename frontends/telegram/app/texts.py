@@ -15,10 +15,12 @@ LANGUAGES: dict[str, dict[str, str]] = {
         "kpi_period_header": "<b><i>[{0}]: </i></b>\n",
         "btn_create": "🛒 Выдать ключ",
         "btn_revoke": "🔸 Отозвать ключ",
-        "btn_renew": "Обновить ключ",
+        "btn_renew": "🆕 Обновить ключ",
+        "btn_info": "ℹ️ Информация о ключе",
         "btn_kpi": "📈 KPI аналитика",
         "unknown_command": "Не известное действие/команда (Напишите /start)",
         "enter_key_to_revoke": "Введите ключ который хотите отозвать",
+        "enter_key_for_info": "Введите ключ у которого хотите получить информацию",
         "enter_key_to_renew": "Введите ключ который хотите обновить",
         "enter_price_for_publish": "Введите цену покупки (если куплен, иначе 0)",
         "kpi_base": """
@@ -50,7 +52,7 @@ LANGUAGES: dict[str, dict[str, str]] = {
 💉 Полезная нагрузка: {1}
 """,
         "subscription_renewed": """
-⏸ Ключ <code>{0}</code> обновлён на {2} с типом `{3}`!
+🆕 Ключ <code>{0}</code> обновлён на {2} с типом `{3}`!
 💉 Полезная нагрузка: {1}
 """,
     },
@@ -65,8 +67,10 @@ LANGUAGES: dict[str, dict[str, str]] = {
         "btn_create": "🛒 Create new",
         "btn_revoke": "🔸 Revoke old",
         "btn_kpi": "📈 KPI analytics",
-        "btn_renew": "Renew key",
+        "btn_renew": "🆕 Renew key",
+        "btn_info": "ℹ️ Get key info",
         "enter_key_to_revoke": "Enter key which you wish to revoke",
+        "enter_key_for_info": "Enter key which you wish to get information about",
         "enter_key_to_renew": "Enter key which you wish to renew",
         "unknown_command": "Unknown action/command (Send /start)",
         "enter_price_for_publish": "Enter price for key (if purchased, else 0)",
@@ -99,7 +103,7 @@ Mean for period: {6}\n
 💉 Injected payload: {1}
 """,
         "subscription_renewed": """
-⏸ Key <code>{0}</code> renewed for {2} days with type `{3}`!
+🆕 Key <code>{0}</code> renewed for {2} days with type `{3}`!
 💉 Injected payload: {1}
 """,
     },

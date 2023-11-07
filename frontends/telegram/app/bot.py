@@ -38,6 +38,13 @@ async def on_startup(*args, **kwargs) -> None:
     print("hook set to", f"{settings.web_host}{settings.hook_path}")
     await _bot.set_webhook(f"{settings.web_host}{settings.hook_path}")
 
+    message = "[bot.startup]!"
+    for user_id in TelegramSettings().admin_ids:
+        try:
+            await _bot.send_message(user_id, message)
+        except Exception:
+            continue
+
 
 def start_http() -> None:
     create_bot()

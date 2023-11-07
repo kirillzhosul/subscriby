@@ -14,6 +14,10 @@ class RevokeSubscription(StatesGroup):
     key = State()
 
 
+class InfoSubscription(StatesGroup):
+    key = State()
+
+
 class RenewSubscription(StatesGroup):
     key = State()
     days = State()

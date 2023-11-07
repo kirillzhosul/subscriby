@@ -9,7 +9,12 @@ from app.keyboards.reply.admin import main_kb
 from app.roles import RoleFilter, UserRole
 from app.services.api import api_call
 from app.settings import TelegramSettings
-from app.states import PublishSubscription, RenewSubscription, RevokeSubscription
+from app.states import (
+    InfoSubscription,
+    PublishSubscription,
+    RenewSubscription,
+    RevokeSubscription,
+)
 from app.texts import T
 
 router = Router(name=__name__)
@@ -85,6 +90,28 @@ async def finish_revoke_subscription(message: Message, state: FSMContext) -> Non
             T["subscription_revoked"].format(p["secret_key"], p["payload"]),
             reply_markup=main_kb.get(),
         )
+    await state.clear()
+
+
+@router.message(F.text == main_kb.BUTTON_KEY_INFO)
+async def start_get_subscription(message: Message, state: FSMContext) -> None:
+    await message.answer(T["enter_key_for_info"], reply_markup=main_kb.get())
+    await state.set_state(InfoSubscription.key)
+
+
+@router.message(StateFilter(InfoSubscription.key))
+async def start_get_subscription(message: Message, state: FSMContext) -> None:
+    await state.update_data(key=message.text)
+    data = await state.get_data()
+    key = str(data.get("key"))
+    request = await api_call("subscription/check", {"secret_key": key})
+    if request is None:
+        await message.answer(T["api_error"], reply_markup=main_kb.get())
+        return
+    await message.answer(
+        str(request),
+        reply_markup=main_kb.get(),
+    )
     await state.clear()
 
 

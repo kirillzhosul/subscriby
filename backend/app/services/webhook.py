@@ -6,6 +6,7 @@ import time
 
 from aiohttp import ClientSession
 from aiohttp.client_exceptions import ClientError
+from fastapi import BackgroundTasks
 
 from app.logger import logger
 from app.settings import Settings
@@ -24,6 +25,13 @@ async def _notify_webhook_target(target: str, payload: dict) -> None:
         logger.warning(
             "[webhooks] One of the targets is unable to respond!", exc_info=e
         )
+
+
+async def notify_startup_with_webhook() -> None:
+    """
+    Notifies webhook listeners for backend restarted / went online
+    """
+    BackgroundTasks().add_task(broadcast_webhook_event, "api.startup", {})
 
 
 async def broadcast_webhook_event(name: str, payload: dict) -> None:
