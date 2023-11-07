@@ -24,7 +24,7 @@ async def start_renew_subscription(message: Message, state: FSMContext) -> None:
     await state.set_state(RenewSubscription.days)
 
 
-@router.message(StateFilter(PublishSubscription.days))
+@router.message(StateFilter(RenewSubscription.days))
 async def renew_subscription_days(message: Message, state: FSMContext) -> None:
     await state.update_data(days=message.text)
     data = await state.get_data()
@@ -40,7 +40,7 @@ async def renew_subscription_days(message: Message, state: FSMContext) -> None:
     await state.set_state(RenewSubscription.key)
 
 
-@router.message(StateFilter(RevokeSubscription.key))
+@router.message(StateFilter(RenewSubscription.key))
 async def finish_renew_subscription(message: Message, state: FSMContext) -> None:
     await state.update_data(key=message.text)
     data = await state.get_data()
