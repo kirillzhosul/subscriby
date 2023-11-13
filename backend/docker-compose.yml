@@ -19,7 +19,7 @@ services:
     hostname: subscriby
     container_name: subscriby_database
     restart: unless-stopped
-    env_file: .env
+    env_file: .database.env
     volumes:
       - ../db:/var/lib/postgresql/data
     command:
