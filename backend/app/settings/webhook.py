@@ -27,4 +27,4 @@ class WebhookSettings(BaseSettings):
     # TODO: maybe migrate that inside database model so it is configurable at the top level?
     # TODO: allow to separate event types for certain target
     # Declares HTTP targets of the webhooks
-    targets: list[HttpUrl] = []
+    targets: list[str] = []

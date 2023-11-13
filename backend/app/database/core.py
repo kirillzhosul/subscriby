@@ -14,7 +14,7 @@ from app.settings import get_settings
 T = TypeVar("T")
 
 engine = create_engine(
-    url=get_settings().database.postgres_dsn,
+    url=str(get_settings().database.postgres_dsn),
     max_overflow=0,
     pool_pre_ping=True,
     pool_recycle=3600,
