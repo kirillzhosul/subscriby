@@ -6,7 +6,7 @@ from fastapi import Request
 from starlette.exceptions import HTTPException
 
 from app.plugins.custom_auth import CustomAuthPlugin
-from app.settings import Settings
+from app.settings import get_settings
 
 
 class AuthDependency:
@@ -19,12 +19,12 @@ class AuthDependency:
         return secret.removeprefix("Bearer ")
 
     def __call__(self, req: Request) -> bool:
-        match Settings().auth_method:
+        match get_settings().auth.method:
             case "none":
                 pass  # No authorization -> no checks
             case "secret":
                 # -> User required to send secret key
-                required_secret = Settings().auth_secret
+                required_secret = get_settings().auth.secret_key
                 if self._get_secret_from_request(req) != required_secret:
                     raise HTTPException(status_code=401)
                 return True

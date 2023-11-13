@@ -10,7 +10,6 @@ from app.database.core import get_repository
 from app.database.repositories.subscription import SubscriptionKPIRepository
 from app.plugins.custom_kpi import CustomKPIPlugin
 from app.services.auth import AuthDependency
-from app.settings import Settings
 
 router = APIRouter(prefix="/analytics")
 
@@ -63,7 +62,7 @@ def get_kpi_for_period(
     periods = {
         date: (
             {key: (counters[key].get(date, 0) or 0) for key in counters.keys()}
-            | {"date": date.strftime(Settings().date_format)}
+            | {"date": date.strftime("%Y.%m.%d")}
         )
         for date in counters["all"].keys()
     }

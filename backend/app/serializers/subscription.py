@@ -9,7 +9,6 @@ import pytz
 
 from app.database.models import Subscription
 from app.services.payload import parse_payload
-from app.settings import Settings
 
 
 def serialize_subscription(subscription: Subscription | None = None) -> dict:
@@ -23,7 +22,7 @@ def serialize_subscription(subscription: Subscription | None = None) -> dict:
     is_valid = subscription.is_active
     if subscription.expires_at:
         expires_at: datetime = subscription.expires_at.replace(tzinfo=pytz.UTC)
-        expires_date = expires_at.strftime(Settings().date_format)
+        expires_date = expires_at.strftime("%Y.%m.%d")
         is_valid &= datetime.now().replace(tzinfo=pytz.UTC) < expires_at
         expires_at: float = time.mktime(expires_at.timetuple())
     return {
