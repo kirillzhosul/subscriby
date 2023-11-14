@@ -3,8 +3,7 @@
 """
 
 
-from functools import lru_cache
-from logging import Logger, getLogger
+from typing import Literal
 
 from pydantic_settings import BaseSettings
 
@@ -17,12 +16,7 @@ class LoggingSettings(BaseSettings):
     class Config:
         env_prefix = "LOGGING_"
 
-
-@lru_cache(maxsize=1)
-def get_logger() -> Logger:
-    """
-    Temporary solution.
-    TODO: Resolve that
-    https://github.com/tiangolo/uvicorn-gunicorn-fastapi-docker/issues/19?ysclid=loxe26k59t67545868
-    """
-    return getLogger("gunicorn.error")
+    level: Literal[
+        "debug", "notset", "info", "warn", "warning", "error", "fatal", "critical"
+    ] = "debug"
+    format: str = "[%(name)s] %(levelname)s: %(message)s"

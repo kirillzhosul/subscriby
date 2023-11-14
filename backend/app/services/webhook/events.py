@@ -14,4 +14,4 @@ class WebhookEventType(str, Enum):
     subscription_renew = "subscription.renew"
     subscription_expired = "subscription.expired"  # TODO: not implemented
     server_startup = "server.startup"
-    server_error = "server.error"
+    server_error = "server.error"  # TODO: not implemented

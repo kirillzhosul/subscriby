@@ -9,12 +9,12 @@ from fastapi import APIRouter, Depends, HTTPException
 from app.database.core import get_repository
 from app.database.repositories.subscription import SubscriptionKPIRepository
 from app.plugins.custom_kpi import CustomKPIPlugin
-from app.services.auth import AuthDependency
+from app.services.auth import auth_required
 
 router = APIRouter(prefix="/analytics")
 
 
-@router.get("/kpi/total", dependencies=[Depends(AuthDependency())])
+@router.get("/kpi/total", dependencies=[Depends(auth_required)])
 def get_kpi_for_total(
     repo: SubscriptionKPIRepository = Depends(
         get_repository(SubscriptionKPIRepository)
@@ -42,7 +42,7 @@ def get_kpi_for_total(
     }
 
 
-@router.get("/kpi/period", dependencies=[Depends(AuthDependency())])
+@router.get("/kpi/period", dependencies=[Depends(auth_required)])
 def get_kpi_for_period(
     repo: SubscriptionKPIRepository = Depends(
         get_repository(SubscriptionKPIRepository)

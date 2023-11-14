@@ -7,7 +7,7 @@ from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
 from app.database.core import get_repository
 from app.database.repositories.subscription import SubscriptionRepository
 from app.serializers.subscription import serialize_subscription
-from app.services.auth import AuthDependency
+from app.services.auth import auth_required
 from app.services.payload import preprocess_payload
 from app.services.webhook import broadcast_webhook_event
 
@@ -26,7 +26,7 @@ def check(
     return serialize_subscription(repo.get(secret_key=secret_key))
 
 
-@router.get("/revoke", dependencies=[Depends(AuthDependency())])
+@router.get("/revoke", dependencies=[Depends(auth_required)])
 async def revoke(
     secret_key: str,
     background_tasks: BackgroundTasks,
@@ -44,8 +44,8 @@ async def revoke(
     return subscription
 
 
-@router.get("/publish", dependencies=[Depends(AuthDependency())])
-async def publish(
+@router.get("/edit", dependencies=[Depends(auth_required)])
+async def edit(
     background_tasks: BackgroundTasks,
     days: int | None = 3,
     payload: str = "{}",
@@ -64,7 +64,7 @@ async def publish(
     return subscription
 
 
-@router.get("/renew", dependencies=[Depends(AuthDependency())])
+@router.get("/renew", dependencies=[Depends(auth_required)])
 async def renew(
     secret_key: str,
     days: int,
@@ -85,6 +85,7 @@ async def renew(
         "days": days,
         "renew_type": renew_type,
     }
+
     if raw_subscription:
         background_tasks.add_task(
             broadcast_webhook_event, "subscription.renew", subscription

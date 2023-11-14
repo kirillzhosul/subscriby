@@ -7,5 +7,6 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /etc/subscriby
 
 COPY pyproject.toml .
+COPY README.md .
 RUN pip install poetry && poetry install
 COPY . /etc/subscriby
