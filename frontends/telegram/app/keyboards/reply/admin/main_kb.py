@@ -11,6 +11,7 @@ BUTTON_REVOKE_OLD = T["btn_revoke"]
 BUTTON_KPI_ANALYTICS = T["btn_kpi"]
 BUTTON_RENEW_OLD = T["btn_renew"]
 BUTTON_KEY_INFO = T["btn_info"]
+BUTTON_LIST_ACTIVE = T["btn_list_active"]
 
 
 def get():
@@ -24,6 +25,7 @@ def get():
             [KeyboardButton(text=BUTTON_REVOKE_OLD)],
             [KeyboardButton(text=BUTTON_RENEW_OLD)],
             [KeyboardButton(text=BUTTON_KPI_ANALYTICS)],
+            [KeyboardButton(text=BUTTON_LIST_ACTIVE)],
         ],
         resize_keyboard=True,
     )

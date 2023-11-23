@@ -121,6 +121,29 @@ async def start_publish_subscription(message: Message, state: FSMContext) -> Non
     await state.set_state(PublishSubscription.days)
 
 
+@router.message(F.text == main_kb.BUTTON_LIST_ACTIVE)
+async def list_active_subscriptions(message: Message) -> None:
+    # Request active subscriptions
+    request = await api_call("subscription/active", {})
+
+    # Check for errors
+    if not request:
+        await message.answer(T["api_error"], reply_markup=main_kb.get())
+        return
+
+    # Extract subscriptions from request
+    subscriptions = request["subscriptions"]
+
+    # Create a string of active subscriptions
+    text = "\n".join(
+        subscription["secret_key"] + " -> " + subscription["expires_date"]
+        for subscription in subscriptions
+    )
+
+    # Send the list of active
+    await message.answer(text, reply_markup=main_kb.get())
+
+
 @router.message(StateFilter(PublishSubscription.days))
 async def publish_subscription_days(message: Message, state: FSMContext) -> None:
     await state.update_data(days=message.text)
