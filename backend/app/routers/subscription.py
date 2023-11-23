@@ -64,6 +64,22 @@ async def publish(
     return subscription
 
 
+@router.get("/active", dependencies=[Depends(auth_required)])
+def get_active(
+    repo: SubscriptionRepository = Depends(get_repository(SubscriptionRepository)),
+):
+    """
+    Get list of all active subscriptions
+    """
+
+    return {
+        "subscriptions": [
+            serialize_subscription(subscription, for_list=True)
+            for subscription in repo.list_active()
+        ]
+    }
+
+
 @router.get("/renew", dependencies=[Depends(auth_required)])
 async def renew(
     secret_key: str,

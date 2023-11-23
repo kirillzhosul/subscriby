@@ -56,6 +56,12 @@ class SubscriptionRepository(SQLRepository):
             self.add_and_commit(model)
             return model
 
+    def list_active(self) -> list[Subscription]:
+        """
+        Returns all active subscriptions
+        """
+        return self.db.query(Subscription).filter(Subscription.is_active).all()
+
     def renew(
         self, secret_key: str, days: int, renew_type: str = "replace"
     ) -> Subscription | None:
