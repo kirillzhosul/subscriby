@@ -44,8 +44,8 @@ async def revoke(
     return subscription
 
 
-@router.get("/edit", dependencies=[Depends(auth_required)])
-async def edit(
+@router.get("/publish", dependencies=[Depends(auth_required)])
+async def publish(
     background_tasks: BackgroundTasks,
     days: int | None = 3,
     payload: str = "{}",
